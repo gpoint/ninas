@@ -29,6 +29,15 @@
     "vue-select2": "^0.2.6",
     "vue-toastification": "1.7.11",
     "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "4.5.10",
+    "@vue/cli-plugin-router": "4.5.10",
+    "@vue/cli-service": "4.5.10",
+    "@vue/compiler-sfc": "3.0.5",
+    "babel-plugin-component": "1.1.1",
+    "node-sass": "^5.0.0",
+    "sass-loader": "10.1.1"
   }
   
 }
