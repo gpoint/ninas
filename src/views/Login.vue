@@ -1,177 +1,109 @@
 <template>
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				
-				<form class="login100-form validate-form js-tilt" data-tilt @submit.prevent="login">
-					<img src="" alt="">
-					<span class="login100-form-title">
-						Member Login
-					</span>
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+          <div class="text-muted text-center mt-2">
+            <small>Sign in with your credentials</small>
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form role="form" @sumbit.prevent="handleLogin()">
+            <base-input
+              formClasses="input-group-alternative mb-3"
+              placeholder="Email"
+              addon-left-icon="ni ni-email-83"
+              v-model:value="model.email"
+            >
+            </base-input>
 
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" v-model="email" placeholder="Email or Username" @input="validate_email">
-						<span class="focus-input100"></span>
-						<span class="symbol-input100">
-							<i class="fa fa-envelope" aria-hidden="true"></i>
-						</span>
-					</div>
+            <base-input
+              formClasses="input-group-alternative mb-3"
+              placeholder="Password"
+              type="password"
+              addon-left-icon="ni ni-lock-circle-open"
+              v-model:value="model.password"
+            >
+            </base-input>
 
-					<div v-if="error!=''" class="wrap-input100">
-						<input class="input100" type="text" v-model="error" placeholder="Email or Username">
-						<!-- <span class="focus-input100">{{error}}</span> -->
-						<span class="symbol-input100">
-						</span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Password is required">
-						<input class="input100" type="password" v-model="password" placeholder="Password" @input="validate_password">
-						<span class="focus-input100"></span>
-						<span class="symbol-input100">
-							<i class="fa fa-lock" aria-hidden="true"></i>
-						</span>
-					</div>
-					
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="submit ">
-							Login
-						</button>
-					</div>
-
-					<div class="text-center p-t-12">
-						<span class="txt1">
-							Forgot
-						</span>
-						<a class="txt2" @click="forgot_password">
-							Username / Password?
-						</a>
-					</div>
-					<br/>
-				</form>
-
-				<div class="login100-pic js-tilt" data-tilt>
-					<img src="" alt="">
-
-							{{jax}}
-					<div class="text-center p-t-136">
-						
-						<router-link class="txt2" to="/register">
-							Create your Account
-							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
-						</router-link>
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>
+            <base-checkbox class="custom-control-alternative">
+              <span class="text-muted">Remember me</span>
+            </base-checkbox>
+            <div class="text-center">
+              <base-button type="success" @click="handleLogin" class="my-4">
+                Sign in
+              </base-button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <a href="#" class="text-light"><small>Forgot password?</small></a>
+        </div>
+        <div class="col-6 text-right">
+          <router-link to="/register" class="text-light"
+            ><small>Create new account</small></router-link
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-<style scoped>
-		
-	.limiter{
-		position: absolute;
-		z-index: 9000;
-
-	}
-
-	@import "../assets/login/vendor/css-hamburgers/hamburgers.min.css";
-	@import "../assets/login/vendor/select2/select2.min.css";
-	@import "../assets/login/css/util.css";
-	@import "../assets/login/css/main.css";
-
-</style>
 <script>
-
 export default {
-  name: 'login',
-  
+  name: "Login",
   data() {
-  	return {
-  		email: 'pop',
-  		password: '',
-  		error: '',
-  		jax: ''
-  	}
+    return {
+      model: {
+        email: "",
+        password: "",
+      },
+      loading: false,
+      message: "",
+    };
   },
-  
   computed: {
-  	
-  	api() {
-  		return this.$store.state.api;
-  	}
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
   },
-  
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/profile");
+    }
+  },
   methods: {
-  	
-  	forgot_password() {
-  		var email = this.email;
-  		this.$router.push({
-  			name: 'forgot-password',
-  			params: {
-  				email: email
-  			}
-  		});
-  	},
+    successFn(data) {
+      if (data.accessToken != null) {
+        window.localStorage.setItem("user", JSON.stringify(data));
+        this.$router.push("/profile");
+      }
+      console.log(data);
+      this.loading = false;
+    },
 
-  	login() {
+    failureFn(error) {
+      this.message = error.message;
+      console.log(error);
+      this.loading = false;
+    },
+    handleLogin() {
+      this.loading = true;
+      this.message = "";
+      this.submitted = true;
 
-  		// alert(window.location.hostname)
+      var obj = {
+        model: this.model,
+        success: this.successFn,
+        failure: this.failureFn,
+      };
 
-  		if(this.error != ''){
-  			return;
-  		}
-
-  		var data = {
-			email: this.email,
-			username: this.email,
-			password: this.password
-		};
-  		
-		this.axios.post((this.api + "/user/auth"), data)
-
-		.then((XObj) => {
-			if(XObj.data.success == true){
-				this.$router.push({
-					name: 'home',
-					params: XObj.data
-				})
-			}
-		})
-
-		.catch((XErr) => {
-			console.log(XErr);
-		});
-  	},
-
-  	login_impl(data) {
-  		// function (data){
-  			// alert(JSON.stringify(data));
-  		// }
-  		this.jax = data;
-  	},
-
-  	validate_email() {
-  		//
-  		this.error = this.email!='' ? '' : 'Please enter an email or username';//  if email is not equal to '' then there is no error, else, error dey ooh!
-  	},
-  	
-  	validate_password() {
-  		//
-  		this.error = this.password!='' ? '' : 'Please enter a password';//same thing as in email
-  	},
-  	
-  	google_login() {
-  		;
-  	}
+      if (this.model.email && this.model.password) {
+        this.$store.dispatch("auth/login", obj);
+      }
+    },
   },
-  mounted() {
-
-	require("@/assets/login/vendor/select2/select2.min.js");
-
-	require("@/assets/login/vendor/tilt/tilt.jquery.min.js");
-	
-	require("@/assets/login/js/main.js");
-	
-  }
 };
 </script>
+<style></style>
