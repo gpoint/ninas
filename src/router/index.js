@@ -1,18 +1,14 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import DashboardLayout from "@/layout/DashboardLayout";
 import AuthLayout from "@/layout/AuthLayout";
 
-import Dashboard from "../views/Dashboard.vue";
 import Education from "../views/Education.vue";
 import Experience from "../views/Experience.vue";
 import Portfolio from "../views/Portfolio.vue";
 import Account from "../views/Account.vue";
 
-import Icons from "../views/Icons.vue";
-import Maps from "../views/Maps.vue";
 import Profile from "../views/UserProfile.vue";
-import Tables from "../views/Tables.vue";
 import Assessors from "../views/Assessors.vue";
 
 import Login from "../views/Login.vue";
@@ -22,14 +18,9 @@ import ForgotPassword from "../views/ForgotPassword.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/profile",
     component: DashboardLayout,
     children: [
-      {
-        path: "/dashboard",
-        name: "dashboard",
-        components: { default: Dashboard },
-      },
       {
         path: "/education",
         name: "education",
@@ -46,16 +37,6 @@ const routes = [
         components: { default: Portfolio },
       },
       {
-        path: "/icons",
-        name: "icons",
-        components: { default: Icons },
-      },
-      {
-        path: "/maps",
-        name: "maps",
-        components: { default: Maps },
-      },
-      {
         path: "/profile",
         name: "profile",
         components: { default: Profile },
@@ -69,11 +50,6 @@ const routes = [
         path: "/assessors",
         name: "assessors",
         components: { default: Assessors },
-      },
-      {
-        path: "/tables",
-        name: "tables",
-        components: { default: Tables },
       },
     ],
   },
@@ -102,7 +78,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   linkActiveClass: "active",
   routes,
 });

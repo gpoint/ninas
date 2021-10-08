@@ -46,6 +46,7 @@ class UserService {
   deleteEducation(id) {
     return axios.delete(API_URL + "education/" + id, { headers: authHeader() });
   }
+  
 }
 
 export default new UserService();

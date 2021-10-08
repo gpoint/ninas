@@ -16,12 +16,12 @@ class UserService {
     });
   }
 
-  getModeratorBoard() {
-    return axios.get(API_URL + "mod", { headers: authHeader() });
+  updateContactinfo(user) {
+    return axios.post(API_URL + "user/contact", user, { headers: authHeader() });
   }
 
-  getAdminBoard() {
-    return axios.get(API_URL + "admin", { headers: authHeader() });
+  changePassword(passwords) {
+    return axios.post(API_URL + "user/change-password", passwords, { headers: authHeader() });
   }
 }
 
