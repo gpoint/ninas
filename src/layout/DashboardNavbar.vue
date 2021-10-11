@@ -10,7 +10,7 @@
                     <div class="media align-items-center">
                         <div class="media-body ml-2 d-none d-lg-block">
                             <span class="mb-0 text-sm font-weight-bold">
-                                <img alt="" :src="user.profilePictureUrl" />
+                                <img alt="" :src="user.profilePictureUrl" style="height: 20px;object-fit: contain;" />
                                 {{ user.name }}
                             </span>
                         </div>

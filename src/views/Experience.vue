@@ -1,10 +1,6 @@
 <template>
 <div>
-    <base-header class="header pb-8 pt-5 pt-md-6 d-flex align-items-center" style="
-        background-image: url(img/theme/profile-cover.jpg);
-        background-size: cover;
-        background-position: center top;
-      ">
+    <base-header class="header pb-8 pt-5 pt-md-6 d-flex align-items-center">
         <!-- Mask -->
         <span class="mask bg-gradient-success opacity-8"></span>
         <!-- Header container -->
@@ -49,7 +45,7 @@
                                                         <base-input alternative="" label="Company" placeholder="Company" input-classes="form-control-alternative" v-model:value="addExperienceModel.company" />
                                                     </div>
                                                     <div class="col-lg-3">
-                                                        <base-input alternative="" label="Country" placeholder="Country" input-classes="form-control-alternative" v-model:value="addExperienceModel.country" />
+                                                        <base-input alternative="" label="Location" placeholder="Location" input-classes="form-control-alternative" v-model:value="addExperienceModel.country" />
                                                     </div>
                                                     <div class="col-lg-2">
                                                         <base-input alternative="" type="date" label="Start Date" placeholder="Start Date" input-classes="form-control-alternative" v-model:value="addExperienceModel.startDate" />
@@ -109,7 +105,7 @@
                                                         <base-input alternative="" label="Company" placeholder="Company" input-classes="form-control-alternative" v-model:value="editExperienceModel.company" />
                                                     </div>
                                                     <div class="col-lg-3 col-sm-6">
-                                                        <base-input alternative="" label="Country" placeholder="Country" input-classes="form-control-alternative" v-model:value="editExperienceModel.country" />
+                                                        <base-input alternative="" label="Location" placeholder="Location" input-classes="form-control-alternative" v-model:value="editExperienceModel.country" />
                                                     </div>
                                                     <div class="col-lg-2 col-sm-3">
                                                         <base-input alternative="" type="date" label="Start Date" placeholder="Start Date" input-classes="form-control-alternative" v-model:value="editExperienceModel.startDate" />

@@ -1,10 +1,6 @@
 <template>
 <div class="content">
-    <base-header class="header pb-8 pt-5 pt-md-6 d-flex align-items-center" style="
-        background-image: url(img/theme/profile-cover.jpg);
-        background-size: cover;
-        background-position: center top;
-      ">
+    <base-header class="header pb-8 pt-5 pt-md-6 d-flex align-items-center">
         <!-- Mask -->
         <span class="mask bg-gradient-success opacity-8"></span>
         <!-- Header container -->

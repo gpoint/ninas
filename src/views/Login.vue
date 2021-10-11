@@ -26,9 +26,6 @@
             >
             </base-input>
 
-            <base-checkbox class="custom-control-alternative">
-              <span class="text-muted">Remember me</span>
-            </base-checkbox>
             <div class="text-center">
               <base-button type="success" @click="handleLogin" class="my-4">
                 Sign in

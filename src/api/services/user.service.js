@@ -23,6 +23,13 @@ class UserService {
   changePassword(passwords) {
     return axios.post(API_URL + "user/change-password", passwords, { headers: authHeader() });
   }
+
+  uploadProfilePicture(file, handleProgress) {
+    return axios.post(API_URL + "user/upload-profile-picture", file, {
+      onUploadProgress: handleProgress,
+      headers: authHeader()
+    });
+  }
 }
 
 export default new UserService();

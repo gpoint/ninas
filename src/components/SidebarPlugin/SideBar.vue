@@ -16,7 +16,7 @@
                         <a class="nav-link" href="#" role="button">
                             <div class="media align-items-center">
                                 <span class="avatar avatar-sm rounded-circle">
-                                    <img alt="" :src="user.profilePictureUrl" />
+                                    <img alt="" :src="user.profilePictureUrl" style="height: 20px;object-fit: contain;" />
                                 </span>
                             </div>
                         </a>
