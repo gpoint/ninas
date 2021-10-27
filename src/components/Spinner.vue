@@ -10,14 +10,14 @@ export default {
     tag: {
       type: String,
       default: "div",
-      description: "HTML tag for spinner",
+      description: "HTML tag for spinner"
     },
     type: {
       type: String,
       default: "border",
-      description: "Spinner type (border|grow)",
-    },
-  },
+      description: "Spinner type (border|grow)"
+    }
+  }
 };
 </script>
 <style></style>

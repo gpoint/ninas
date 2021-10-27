@@ -7,6 +7,7 @@
       :id="cbId"
       @input="$emit('update:checked', $event.target.checked)"
       :checked="checked"
+      :required="required ? true : null"
       class="custom-control-input"
       type="checkbox"
       :disabled="disabled"
@@ -38,6 +39,10 @@ export default {
     inline: {
       type: Boolean,
       description: "Whether checkbox is inline",
+    },
+    required: {
+      type: Boolean,
+      description: "Whether checkbox is required",
     },
   },
   data() {

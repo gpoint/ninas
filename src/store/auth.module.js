@@ -14,12 +14,10 @@ export const auth = {
     login({ commit }, obj) {
       AuthService.login(obj.model)
         .then((response) => {
-          commit("loginSuccess", {
-            user: response.data,
-            success: obj.success,
-          });
+          commit("loginSuccess", response.data);
+          obj.success(response.data);
         })
-        .catch(obj.error);
+        .catch((error) => obj.failure(error));
     },
     logout({ commit }) {
       AuthService.logout();
@@ -28,19 +26,16 @@ export const auth = {
     register({ commit }, obj) {
       AuthService.register(obj.model)
         .then((response) => {
-          commit("registerSuccess", {
-            user: response.data,
-            success: obj.success,
-          });
+          commit("registerSuccess", response.data);
+          obj.success(response.data);
         })
-        .catch(obj.error);
+        .catch((error) => obj.failure(error));
     },
   },
   mutations: {
-    loginSuccess(state, obj) {
+    loginSuccess(state, user) {
       state.status.loggedIn = true;
-      state.user = obj.user;
-      obj.success(obj.user);
+      state.user = user;
     },
     loginFailure(state) {
       state.status.loggedIn = false;
@@ -50,10 +45,9 @@ export const auth = {
       state.status.loggedIn = false;
       state.user = null;
     },
-    registerSuccess(state, obj) {
-      state.status.loggedIn = true;
-      state.user = obj.user;
-      obj.success(obj.user);
+    registerSuccess(state, user) {
+      state.status.loggedIn = false;
+      state.user = user;
     },
     registerFailure(state) {
       state.status.loggedIn = false;

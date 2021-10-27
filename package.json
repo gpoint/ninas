@@ -15,15 +15,15 @@
     "check-password-strength": "^2.0.3",
     "choices.js": "^9.0.1",
     "core-js": "3.6.5",
-    "element-plus": "^1.0.1-beta.24",
+    "element-plus": "1.0.1-beta.24",
     "google-maps": "4.3.3",
     "jquery": "^3.6.0",
     "nouislider": "14.6.0",
     "sass": "^1.39.2",
     "select2": "^4.1.0-rc.0",
-    "sweetalert2": "^11.1.6",
     "vee-validate": "^4.4.11",
     "vue": "3.0.5",
+    "vue-cropperjs": "^5.0.0",
     "vue-fontawesome": "0.0.2",
     "vue-router": "4.0.1",
     "vue-select2": "^0.2.6",
@@ -39,5 +39,4 @@
     "node-sass": "^5.0.0",
     "sass-loader": "10.1.1"
   }
-  
 }

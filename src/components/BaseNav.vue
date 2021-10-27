@@ -13,10 +13,7 @@
           :to="$route.path"
           class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
         >
-          <img
-            style="filter: blur(1px); -webkit-filter: blur(1px)"
-            src="img/brand/white.png"
-          />
+          <img style="max-height: 100px" src="img/brand/white.png" />
         </router-link>
       </slot>
       <navbar-toggle-button

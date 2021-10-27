@@ -28,6 +28,7 @@
     <slot>
       <input
         :value="value"
+        :required="required ? true : null"
         @input="$emit('update:value', $event.target.value)"
         v-bind="$attrs"
         :style="readonly ? 'background: #fff;' : ''"

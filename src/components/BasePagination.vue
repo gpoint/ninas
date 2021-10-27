@@ -1,68 +1,58 @@
 <template>
   <ul
     class="pagination"
-    :class="
-      ([size && `pagination-${size}`, align && `justify-content-${align}`],
-      paginationClass)
-    "
+    :class="[size && `pagination-${size}`, align && `justify-content-${align}`]"
   >
-    <li class="page-item prev-page" :class="{ disabled: modelValue === 1 }">
+    <li class="page-item prev-page" :class="{ disabled: value === 1 }">
       <a class="page-link" aria-label="Previous" @click="prevPage">
-        <i class="fa fa-angle-left"></i>
+        <span aria-hidden="true"
+          ><i class="fa fa-angle-left" aria-hidden="true"></i
+        ></span>
       </a>
     </li>
     <li
       class="page-item"
-      v-for="item in range(minPage, maxPage)"
+      :class="{ active: value === item }"
       :key="item"
-      :class="{ active: modelValue === item }"
+      v-for="item in range(minPage, maxPage)"
     >
       <a class="page-link" @click="changePage(item)">{{ item }}</a>
     </li>
-    <li
-      class="page-item page-pre next-page"
-      :class="{ disabled: modelValue === totalPages }"
-    >
+    <li class="page-item next-page" :class="{ disabled: value === totalPages }">
       <a class="page-link" aria-label="Next" @click="nextPage">
-        <i class="fa fa-angle-right"></i>
+        <span aria-hidden="true"
+          ><i class="fa fa-angle-right" aria-hidden="true"></i
+        ></span>
       </a>
     </li>
   </ul>
 </template>
 <script>
 export default {
-  name: "n-pagination",
-  emits: ["update:modelValue"],
+  name: "base-pagination",
   props: {
-    type: {
-      type: String,
-      default: "primary",
-      validator: (value) => {
-        return [
-          "default",
-          "primary",
-          "danger",
-          "success",
-          "warning",
-          "info",
-        ].includes(value);
-      },
-    },
     pageCount: {
       type: Number,
       default: 0,
+      description:
+        "Pagination page count. This should be specified in combination with perPage",
     },
     perPage: {
       type: Number,
       default: 10,
+      description:
+        "Pagination per page. Should be specified with total or pageCount",
     },
     total: {
-      type: Number,
+      type: [String, Number],
       default: 0,
+      description:
+        "Can be specified instead of pageCount. The page count in this case will be total/perPage",
     },
-    modelValue: {
+    value: {
       type: Number,
       default: 1,
+      description: "Pagination value",
     },
     size: {
       type: String,
@@ -76,9 +66,6 @@ export default {
     },
   },
   computed: {
-    paginationClass() {
-      return `pagination-${this.type}`;
-    },
     totalPages() {
       if (this.pageCount > 0) return this.pageCount;
       if (this.total > 0) {
@@ -93,21 +80,21 @@ export default {
       return this.defaultPagesToDisplay;
     },
     minPage() {
-      if (this.modelValue >= this.pagesToDisplay) {
+      if (this.value >= this.pagesToDisplay) {
         const pagesToAdd = Math.floor(this.pagesToDisplay / 2);
-        const newMaxPage = pagesToAdd + this.modelValue;
+        const newMaxPage = pagesToAdd + this.value;
         if (newMaxPage > this.totalPages) {
           return this.totalPages - this.pagesToDisplay + 1;
         }
-        return this.modelValue - pagesToAdd;
+        return this.value - pagesToAdd;
       } else {
         return 1;
       }
     },
     maxPage() {
-      if (this.modelValue >= this.pagesToDisplay) {
+      if (this.value >= this.pagesToDisplay) {
         const pagesToAdd = Math.floor(this.pagesToDisplay / 2);
-        const newMaxPage = pagesToAdd + this.modelValue;
+        const newMaxPage = pagesToAdd + this.value;
         if (newMaxPage < this.totalPages) {
           return newMaxPage;
         } else {
@@ -132,25 +119,25 @@ export default {
       return arr;
     },
     changePage(item) {
-      this.$emit("update:modelValue", item);
+      this.$emit("input", item);
     },
     nextPage() {
-      if (this.modelValue < this.totalPages) {
-        this.$emit("update:modelValue", this.modelValue + 1);
+      if (this.value < this.totalPages) {
+        this.$emit("input", this.value + 1);
       }
     },
     prevPage() {
-      if (this.modelValue > 1) {
-        this.$emit("update:modelValue", this.modelValue - 1);
+      if (this.value > 1) {
+        this.$emit("input", this.value - 1);
       }
     },
   },
   watch: {
     perPage() {
-      this.$emit("update:modelValue", 1);
+      this.$emit("input", 1);
     },
     total() {
-      this.$emit("update:modelValue", 1);
+      this.$emit("input", 1);
     },
   },
 };

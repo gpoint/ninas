@@ -12,11 +12,11 @@ import "choices.js/public/assets/styles/choices.min.css";
 export default {
   name: "selects",
   props: ["options", "value"],
-  mounted: function () {
+  mounted: function() {
     this.choicesInstance = new Choices(this.$refs.select, {
       removeItemButton: true,
       editItems: true,
-      delimiter: ",",
+      delimiter: ","
     });
     this.$refs.select.addEventListener("addItem", this.handleSelectChange);
     this.setChoices();
@@ -27,11 +27,11 @@ export default {
     },
     setChoices() {
       this.choicesInstance.setChoices(this.options, "id", "text", true);
-    },
+    }
   },
-  destroyed: function () {
+  destroyed: function() {
     this.choicesInstance.destroy();
-  },
+  }
 };
 </script>
 <style></style>

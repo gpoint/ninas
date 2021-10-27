@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content bg-default">
+  <div class="main-content bg-primary">
     <!-- Navbar -->
     <base-nav
       class="navbar-top navbar-horizontal navbar-dark"
@@ -31,10 +31,10 @@
         <!-- Navbar items -->
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <router-link class="nav-link nav-link-icon" to="/">
-              <i class="ni ni-planet"></i>
+            <a class="nav-link nav-link-icon" href="https://caa.cstemp.org/">
+              <i class="fa fa-home"></i>
               <span class="nav-link-inner--text">Home</span>
-            </router-link>
+            </a>
           </li>
           <li class="nav-item">
             <router-link class="nav-link nav-link-icon" to="/register">
@@ -49,16 +49,19 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link nav-link-icon" to="/support">
+            <a
+              class="nav-link nav-link-icon"
+              href="https://caa.cstemp.org/#contact"
+            >
               <i class="ni ni-support-16"></i>
               <span class="nav-link-inner--text">Support</span>
-            </router-link>
+            </a>
           </li>
         </ul>
       </template>
     </base-nav>
     <!-- Header -->
-    <div class="header bg-gradient-success py-7 py-lg-8">
+    <div class="header bg-gradient-default py-7 py-lg-8">
       <div class="container">
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
@@ -80,10 +83,7 @@
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <polygon
-            class="fill-default"
-            points="2560 0 2560 100 0 100"
-          ></polygon>
+          <polygon class="fill-primary" points="2560 0 2560 100 0 100"></polygon>
         </svg>
       </div>
     </div>
@@ -98,9 +98,9 @@
             © {{ year }}
             <a
               href="https://www.ninas.ng"
-              class="font-weight-bold ml-1 text-success"
+              class="font-weight-bold ml-1 text-default"
               target="_blank"
-              >Nigerian National Accreditation System</a
+              >Construction Atrisans Awards</a
             >
           </div>
         </div>

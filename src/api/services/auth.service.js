@@ -15,7 +15,7 @@ class AuthService {
       window.location = window.location.href;
     }
     axios
-      .get(API_URL + "user/profile", {
+      .get(API_URL + "user", {
         headers: authHeader(),
       })
       .then((response) => {
@@ -50,6 +50,7 @@ class AuthService {
       firstName: user.firstname,
       lastName: user.lastname,
       email: user.email,
+      phone: user.phone,
       password: user.password,
       confirmPassword: user.confirmPassword,
     });

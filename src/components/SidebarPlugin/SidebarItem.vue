@@ -7,7 +7,12 @@
       :target="link.target"
     >
       <i :class="link.icon"></i>
-      <span class="nav-link-text">{{ link.name }}</span>
+      <span class="nav-link-text" v-if="link.path != '/logout'">
+        {{ link.name }}
+      </span>
+      <span class="nav-link-text" v-else>
+        <strong>{{ link.name }}</strong>
+      </span>
     </router-link>
   </li>
 </template>

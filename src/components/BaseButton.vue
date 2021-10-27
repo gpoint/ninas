@@ -3,27 +3,28 @@
     :is="tag"
     :type="tag === 'button' ? nativeType : ''"
     class="btn"
+    :disabled="loading"
     :class="classes"
   >
     <span
       class="btn-inner--icon"
-      v-if="$slots.icon || (icon && $slots.default)"
+      v-if="($slots.icon || (icon && $slots.default)) && !loading"
     >
       <slot name="icon">
         <i :class="icon"></i>
       </slot>
     </span>
-    <i v-if="!$slots.default" :class="icon"></i>
+    <i v-if="!$slots.default && !loading" :class="icon"></i>
+    <div v-if="loading" class="lds-facebook"><div class="bg-danger"></div><div></div><div class="bg-info"></div></div>
     <span
       class="btn-inner--text"
-      v-if="$slots.icon || (icon && $slots.default)"
+      v-if="($slots.icon || (icon && $slots.default)) && !loading"
     >
-      <span v-show="loading" class="spinner-border spinner-border-sm"></span>
       <slot>
         {{ text }}
       </slot>
     </span>
-    <slot v-if="!$slots.icon && !icon"></slot>
+    <slot v-if="!$slots.icon && !icon && !loading"></slot>
   </component>
 </template>
 <script>
@@ -115,4 +116,43 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.lds-facebook {
+  text-align: center !important;
+  display: inline-block;
+  position: relative;
+  width: 32px;
+  height: 18px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  margin-right: 4px;
+  width: 8px;
+  background: #fff;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 0px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 12px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 24px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: -3px;
+    height: 30px;
+  }
+  50%, 100% {
+    top: 4px;
+    height: 16px;
+  }
+}
+
+</style>

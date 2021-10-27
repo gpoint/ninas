@@ -7,25 +7,17 @@ var API_URL = config.API_URL;
 
 class UserService {
   getProfile() {
-    return axios.get(API_URL + "user/profile", { headers: authHeader() });
+    return axios.get(API_URL + "user", { headers: authHeader() });
   }
 
   saveProfile(user) {
-    return axios.post(API_URL + "user/profile", user, {
+    return axios.post(API_URL + "user", user, {
       headers: authHeader(),
     });
   }
 
-  updateContactinfo(user) {
-    return axios.post(API_URL + "user/contact", user, { headers: authHeader() });
-  }
-
-  changePassword(passwords) {
-    return axios.post(API_URL + "user/change-password", passwords, { headers: authHeader() });
-  }
-
   uploadProfilePicture(file, handleProgress) {
-    return axios.post(API_URL + "user/upload-profile-picture", file, {
+    return axios.post(API_URL + "user/upload-photo", file, {
       onUploadProgress: handleProgress,
       headers: authHeader()
     });

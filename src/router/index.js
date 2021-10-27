@@ -1,55 +1,40 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import DashboardLayout from "@/layout/DashboardLayout";
-import AuthLayout from "@/layout/AuthLayout";
-
-import Education from "../views/Education.vue";
-import Experience from "../views/Experience.vue";
-import Portfolio from "../views/Portfolio.vue";
 import Account from "../views/Account.vue";
 
-import Profile from "../views/UserProfile.vue";
-import Assessors from "../views/Assessors.vue";
-
+import AuthLayout from "@/layout/AuthLayout";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 
+//Admin Views
+import Dashboard from "../views/Dashboard.vue";
+
+//Assessor Views
+import AssessorProfile from "../views/AssessorProfile.vue";
+
+
 const routes = [
   {
     path: "/",
-    redirect: "/profile",
+    redirect: "/dashboard",
     component: DashboardLayout,
     children: [
       {
-        path: "/education",
-        name: "education",
-        components: { default: Education },
-      },
-      {
-        path: "/experience",
-        name: "experience",
-        components: { default: Experience },
-      },
-      {
-        path: "/portfolio",
-        name: "portfolio",
-        components: { default: Portfolio },
-      },
-      {
-        path: "/profile",
-        name: "profile",
-        components: { default: Profile },
+        path: "/dashboard",
+        name: "dashboard",
+        components: { default: Dashboard },
       },
       {
         path: "/account",
-        name: "account;",
+        name: "account",
         components: { default: Account },
       },
       {
-        path: "/assessors",
-        name: "assessors",
-        components: { default: Assessors },
+        path: "/assessor",
+        name: "assessor",
+        components: { default: AssessorProfile },
       },
     ],
   },
@@ -78,18 +63,25 @@ const routes = [
 ];
 
 const router = createRouter({
+  mode: "history",
   history: createWebHistory(),
   linkActiveClass: "active",
   routes,
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ["/login", "/register", "/home", "/support"];
-  const authRequired = !publicPages.includes(to.path);
-  var loggedIn = localStorage.getItem("user");
+  const pages = {
+    PUBLIC: ["login", "register", "home", "support"],
+    PROTECTED: ["account"],
+    ASSESSOR: ["assessor", "experience", "education", "referees"],
+    ASSESSOR: ["assessor"],
+    ZONAL_COORDINATOR: ["zonal-coordinator"],
+    MANAGER: ["manager"],
+    ADMINISTRATOR: ["admin"],
+  };
 
-  const assessorRoutes = ["/portfolio", "/experience", "/education", "/as"];
-  const adminRoutes = ["/assessors"];
+  const authRequired = !pages.PUBLIC.includes(to.name);
+  var loggedIn = localStorage.getItem("user");
 
   // trying to access a restricted page + not logged in
   // redirect to login page
@@ -105,16 +97,11 @@ router.beforeEach((to, from, next) => {
     }
 
     if (
-      assessorRoutes.includes(to.path) &&
-      !loggedIn.user.roles.includes("ASSESSOR")
+      !pages[loggedIn.user.role].includes(to.name) &&
+      !pages.PROTECTED.includes(to.name)
     ) {
-      next("/login");
-    }
-    if (
-      adminRoutes.includes(to.path) &&
-      !loggedIn.user.roles.includes("ADMINISTRATOR")
-    ) {
-      next("/login");
+      next(pages[loggedIn.user.role][0]);
+      return;
     }
   }
   next();
