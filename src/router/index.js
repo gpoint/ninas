@@ -74,10 +74,9 @@ router.beforeEach((to, from, next) => {
     PUBLIC: ["login", "register", "home", "support"],
     PROTECTED: ["account"],
     ASSESSOR: ["assessor", "experience", "education", "referees"],
-    ASSESSOR: ["assessor"],
     ZONAL_COORDINATOR: ["zonal-coordinator"],
     MANAGER: ["manager"],
-    ADMINISTRATOR: ["admin"],
+    ADMINISTRATOR: ["assessor"],
   };
 
   const authRequired = !pages.PUBLIC.includes(to.name);

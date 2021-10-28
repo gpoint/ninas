@@ -100,7 +100,7 @@
               href="https://www.ninas.ng"
               class="font-weight-bold ml-1 text-default"
               target="_blank"
-              >Construction Atrisans Awards</a
+              >Nigerian National Accreditation System</a
             >
           </div>
         </div>
