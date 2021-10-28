@@ -21,6 +21,7 @@
     "nouislider": "14.6.0",
     "sass": "^1.39.2",
     "select2": "^4.1.0-rc.0",
+    "sweetalert2": "^11.1.6",
     "vee-validate": "^4.4.11",
     "vue": "3.0.5",
     "vue-cropperjs": "^5.0.0",

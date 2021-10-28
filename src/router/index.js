@@ -14,6 +14,9 @@ import Dashboard from "../views/Dashboard.vue";
 //Assessor Views
 import AssessorProfile from "../views/AssessorProfile.vue";
 
+//Administrator Views
+import Assessors from "../views/Assessors.vue";
+
 
 const routes = [
   {
@@ -35,6 +38,11 @@ const routes = [
         path: "/assessor",
         name: "assessor",
         components: { default: AssessorProfile },
+      },
+      {
+        path: "/assessors",
+        name: "assessors",
+        components: { default: Assessors },
       },
     ],
   },
@@ -76,7 +84,7 @@ router.beforeEach((to, from, next) => {
     ASSESSOR: ["assessor", "experience", "education", "referees"],
     ZONAL_COORDINATOR: ["zonal-coordinator"],
     MANAGER: ["manager"],
-    ADMINISTRATOR: ["assessor"],
+    ADMINISTRATOR: ["assessors"],
   };
 
   const authRequired = !pages.PUBLIC.includes(to.name);

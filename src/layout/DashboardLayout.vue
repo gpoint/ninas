@@ -3,35 +3,41 @@
     <side-bar short-title="CAA" title="Construction Assessors Awards">
         <template v-slot:links>
 
-            <sidebar-item :link="{
+            <sidebar-item v-if="user.role == 'ADMINISTRATOR'" :link="{
+              name: 'Assessors',
+              icon: 'ni ni-single-02 text-danger',
+              path: '/profile',
+            }" />
+
+            <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Profile',
               icon: 'ni ni-single-02 text-danger',
               path: '/profile',
             }" />
 
            
-            <sidebar-item :link="{
+            <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Education',
               icon: 'ni ni-paper-diploma text-default',
               path: '/assessor#education',
             }" />
 
-            <sidebar-item :link="{
+            <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Experience',
               icon: 'ni ni-user-run text-danger',
               path: '/assessor#experience',
             }" />
 
-            <sidebar-item :link="{
+            <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'CAB Experience',
               icon: 'ni ni-compass-04 text-default',
               path: '/assessor#cab-experience',
             }" />
 
-            <sidebar-item :link="{
-              name: 'Referees',
+            <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
+              name: 'Standards',
               icon: 'ni ni-like-2 text-danger',
-              path: '/assessor#referees',
+              path: '/assessor#standards',
             }" />
 
             <sidebar-item :link="{
@@ -66,6 +72,11 @@ export default {
         return {
             sidebarBackground: "red", //vue|blue|orange|green|red|primary
         };
+    },
+    computed: {
+      user(){
+        return JSON.parse(localStorage.getItem("user")).user
+      }
     },
     methods: {
         toggleSidebar() {

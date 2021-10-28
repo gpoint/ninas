@@ -109,6 +109,12 @@ class AssessorService {
       headers: authHeader(),
     });
   }
+
+  getAssessors() {
+    return axios.get(API_URL + "assessor/paged", {
+      headers: authHeader(),
+    });
+  }
 }
 
 export default new AssessorService();
