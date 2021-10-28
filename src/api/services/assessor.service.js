@@ -66,6 +66,31 @@ class AssessorService {
     });
   }
 
+  // CAB xperience
+  addCABJob(job) {
+    return axios.post(API_URL + "assessor/cab-experience", job, {
+      headers: authHeader(),
+    });
+  }
+
+  updateCABJob(index, job) {
+    return axios.put(API_URL + "assessor/cab-experience/" + index, job, {
+      headers: authHeader(),
+    });
+  }
+
+  uploadCABJobEvidence(index, formData) {
+    return axios.put(API_URL + "assessor/cab-experience/" + index, formData, {
+      headers: authHeader(),
+    });
+  }
+
+  deleteCABJob(index) {
+    return axios.delete(API_URL + "assessor/cab-experience/" + index, {
+      headers: authHeader(),
+    });
+  }
+
   // Referees
   addReferee(referee) {
     return axios.post(API_URL + "assessor/referee", referee, {

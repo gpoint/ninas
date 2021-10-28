@@ -22,7 +22,7 @@
 
     <div class="container-fluid mt--7">
         <div class="row">
-            <div class="col-xl-7 order-xl-1">
+            <form class="col-xl-7 order-xl-1"  @submit.prevent="saveProfile">
                 <card shadow type="secondary">
                     <template v-slot:header>
                         <div class="bg-white border-0">
@@ -31,12 +31,13 @@
                                     <h3 class="mb-0">My Account</h3>
                                 </div>
                                 <div class="col-4 text-right">
-                                    <a href="/profile" @click.prevent="saveProfile" class="btn btn-sm btn-default">Save</a>
+                                    <base-button native-type="submit" v-model:loading="loading" class="btn btn-sm btn-default">Save</base-button>
                                 </div>
                             </div>
                         </div>
                     </template>
-                    <form>
+                    <div>
+                      <form-message v-model:type="messageType" v-model:message="message" ></form-message>
                         <h6 class="heading-small text-muted mb-4">User Information</h6>
                         <div class="pl-lg-4">
                             <div class="row">
@@ -63,9 +64,9 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </card>
-            </div>
+            </form>
             <form class="col-xl-5 order-xl-1" @submit.prevent="validatePassword">
                 <card shadow type="secondary">
                     <template v-slot:header>
@@ -74,7 +75,7 @@
                                 <div class="col-8">
                                     <h3 class="mb-0">Update Password</h3>
                                 </div>
-                                <modal v-model:show="showPasswordConfirmationModal" gradient="white" modal-classes="modal-danger modal-dialog-centered">
+                                <modal v-model:show="showPasswordConfirmationModal" gradient="dark" modal-classes="modal-danger modal-dialog-centered">
                                     <template v-slot:header>
                                         <h6 class="modal-title text-danger" id="modal-title-notification">
                                             Caution...
@@ -95,24 +96,19 @@
                                     </template>
                                 </modal>
                                 <div class="col-4 text-right">
-                                    <button href="/profile" class="btn btn-sm btn-default">Save</button>
+                                    <base-button native-type="submit" v-model:loading="passwordLoading" class="btn btn-sm btn-default">Save</base-button>
                                 </div>
                             </div>
                         </div>
                     </template>
                     <div>
                         <div class="pl-lg-4">
+                            <form-message v-model:type="passwordMessageType" v-model:message="passwordMessage"></form-message>
                             <div class="row">
                                 <div class="col-lg-12 mb-3">
-                                    <div readonly class="btn-outline-danger form-control form-control-sm form-control-alternates" v-if="passwordError != ''" @click="passwordError = ''">
-                                        {{ passwordError }} <i class="fa fa-times float-right my-1"></i>
-                                    </div>
-                                    <div readonly class="btn-outline-success form-control form-control-sm form-control-alternates" v-if="passwordSuccess != ''" @click="passwordSuccess = ''">
-                                        {{ passwordSuccess }} <i class="fa fa-times float-right my-1"></i>
-                                    </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <base-input alternative="" :required="true" label="Current Password" type="password" placeholder="Enter your current password" input-classes="form-control-alternative" v-model:value="passwordModel.password" />
+                                    <base-input alternative="" :required="true" label="Current Password" type="password" placeholder="Enter your current password" input-classes="form-control-alternative" v-model:value="passwordModel.oldPassword" />
                                 </div>
                                 <div class="col-lg-6">
                                     <base-input alternative="" :required="true" min-length="8" type="password" label="New Password" placeholder="Enter New Password" input-classes="form-control-alternative" v-model:value="passwordModel.newPassword" />
@@ -159,21 +155,32 @@ import {
     passwordStrength
 } from "check-password-strength";
 import UserService from "../api/services/user.service";
+import FormMessage from "../components/FormMessage.vue"
+import BaseButton from '../components/BaseButton.vue';
 
 export default {
     name: "user-profile",
+    components: {
+        FormMessage,
+        BaseButton,
+    },
     data() {
         return {
             model: {},
             contactModel: {},
             passwordModel: {
-                password: "",
+                oldPassword: "",
                 newPassword: "",
                 confirmPassword: "",
             },
-            passwordError: "",
-            passwordSuccess: "",
+            loading: null,
+            passwordLoading: null,
+            message: "",
+            messageType: "",
+            passwordMessage: "",
+            passwordMessageType: "",
             showPasswordConfirmationModal: false,
+
         };
     },
     computed: {
@@ -182,19 +189,30 @@ export default {
         },
     },
     methods: {
-        updateContactInfo() {
-            UserService.updateContactinfo(this.contactModel);
+        saveProfile() {
+          this.loading = true;
+            UserService.saveProfile(this.model).then((response) => {
+                this.message = response.data.message;
+                this.messageType = "success";
+            }).catch((error) => {
+
+                this.messageType = "danger";
+                this.message = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message;;
+            }).finally(() => {
+              this.loading = false;
+            });
         },
         validatePassword() {
 
-            if (this.passwordModel.password.length < 8) {
-                this.passwordError = "Old password is less than 8";
+            this.passwordMessageType = "danger";
+            if (this.passwordModel.oldPassword.length < 8) {
+                this.passwordMessage = "Old password is less than 8";
             } else if (this.passwordModel.newPassword.length < 8) {
-                this.passwordError = "New password is not long enough";
+                this.passwordMessage = "New password is not long enough";
             } else if (this.passwordTest.id < 1) {
-                this.passwordError = "New password is too weak";
+                this.passwordMessage = "New password is too weak";
             } else if (this.passwordModel.newPassword != this.passwordModel.confirmPassword) {
-                this.passwordError = "Passwords do not match";
+                this.passwordMessage = "Passwords do not match";
             } else {
                 this.showPasswordConfirmationModal = true;
             }
@@ -202,18 +220,27 @@ export default {
         changePassword() {
 
             this.showPasswordConfirmationModal = false;
+            this.passwordLoading = true;
 
             UserService.changePassword(this.passwordModel).then((response) => {
                 if (response.data.isSuccess) {
                     this.passwordModel.password = this.newPassword;
 
-                    this.passwordSuccess = response.data.message;
+                    this.passwordMessageType = "success";
+                    this.passwordMessage = response.data.message;
 
                     this.passwordModel.newPassword = "";
                     this.passwordModel.confirmPassword = "";
                 } else {
-                    this.passwordError = response.data.message;
+                    this.passwordMessageType = "danger";
+                    this.passwordMessage = response.data.message;
                 }
+            }).catch((error) => {
+                this.passwordMessageType = "danger";
+                this.passwordMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message;
+            }).finally(() => {
+
+                this.passwordLoading = null;
             });
         },
     },

@@ -16,6 +16,10 @@ class UserService {
     });
   }
 
+  changePassword(passwords) {
+    return axios.patch(API_URL + "user/change-password", passwords, { headers: authHeader() });
+  }
+
   uploadProfilePicture(file, handleProgress) {
     return axios.post(API_URL + "user/upload-photo", file, {
       onUploadProgress: handleProgress,

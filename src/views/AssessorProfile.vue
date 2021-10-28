@@ -121,7 +121,7 @@
                         <h6 class="heading-small text-muted mb-4">Assessor information</h6>
                         <div class="pl-lg-4">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Gender</label>
                                         <select :disabled="profile.loading" class="form-control-alternative form-control" v-model="profile.model.gender" style="width: 100%">
@@ -130,24 +130,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <base-input :disabled="profile.loading" alternative="" type="date" label="Date Of Birth" placeholder="Date Of Birth" input-classes="form-control-alternative" v-model:value="profile.model.dateOfBirth" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="form-control-label">
-                                            Trade ( Area Of Specialty )
-                                        </label>
-                                        <select :disabled="profile.loading" class="form-control-alternative form-control" v-model="profile.model.trade" style="width: 100%">
-                                            <option v-for="trade in trades" :key="trade" :value="trade">
-                                                {{ trade }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-control-label">
                                             Years Of Experience
@@ -159,26 +142,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="form-control-label">
-                                            Contesting Cateogry
-                                        </label>
-                                        <select :disabled="profile.loading" class="form-control-alternative form-control" v-model="profile.model.category" style="width: 100%">
-                                            <option :value="'Assessor Of The Year ( ' + profile.model.gender + ' )'" v-if="profile.model.gender != null && profile.model.gender != ''">
-                                                Assessor Of The Year ( {{ profile.model.gender }} )
-                                            </option>
-                                            <option :value="profile.model.trade + ' Of The Year'" v-if="profile.model.trade != null && profile.model.trade != ''">
-                                                {{ profile.model.trade }} Of The Year
-                                            </option>
-                                            <option value="Apprentice Of The Year">
-                                                Apprentice Of The Year
-                                            </option>
-                                            <option value="Instructor Of The Year">
-                                                Instructor Of The Year
-                                            </option>
-                                        </select>
-                                    </div>
+                                <div class="col-md-4">
+                                    <base-input :disabled="profile.loading" alternative="" type="date" label="Date Of Birth" placeholder="Date Of Birth" input-classes="form-control-alternative" v-model:value="profile.model.dateOfBirth" />
                                 </div>
                             </div>
                         </div>
@@ -244,6 +209,8 @@
 
       <Experience id="experience" classes="mt-3"></Experience>
 
+      <CABExperience id="cab-experience" classes="mt-3"></CABExperience>
+
       <Referees id="referees" classes="mt-3"></Referees>
 
     </div>
@@ -257,6 +224,7 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import Education from './assessor/Education.vue';
 import Experience from './assessor/Experience.vue';
+import CABExperience from './assessor/CABExperience.vue';
 import Referees from './assessor/Referees.vue';
 import FormMessage from '../components/FormMessage.vue';
 
@@ -266,6 +234,7 @@ export default {
         VueCropper,
         Education,
         Experience,
+        CABExperience,
         Referees,
         FormMessage,
     },
@@ -359,7 +328,8 @@ export default {
 
                 UserService.uploadProfilePicture(formData).then((response) => {
                     if (response.data.isSuccess) {
-                        user.photoUrl = this.$refs.cropper.getCroppedCanvas().toDataUrl();
+                        fetch(response.data.result.photoUrl);
+                        // this.user.photoUrl = this.$refs.cropper.getCroppedCanvas().toDataUrl();
                         // user.
                         window.location.reload();
                     }

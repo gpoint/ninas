@@ -23,14 +23,20 @@
             }" />
 
             <sidebar-item :link="{
+              name: 'CAB Experience',
+              icon: 'ni ni-compass-04 text-default',
+              path: '/assessor#cab-experience',
+            }" />
+
+            <sidebar-item :link="{
               name: 'Referees',
-              icon: 'ni ni-like-2 text-default',
+              icon: 'ni ni-like-2 text-danger',
               path: '/assessor#referees',
             }" />
 
             <sidebar-item :link="{
               name: 'Account',
-              icon: 'ni ni-briefcase-24 text-danger',
+              icon: 'ni ni-briefcase-24 text-default',
               path: '/account',
             }" />
         </template>
