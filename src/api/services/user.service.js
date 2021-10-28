@@ -11,7 +11,7 @@ class UserService {
   }
 
   saveProfile(user) {
-    return axios.post(API_URL + "user", user, {
+    return axios.put(API_URL + "user", user, {
       headers: authHeader(),
     });
   }

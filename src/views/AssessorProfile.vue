@@ -359,12 +359,15 @@ export default {
 
                 UserService.uploadProfilePicture(formData).then((response) => {
                     if (response.data.isSuccess) {
+                        user.photoUrl = this.$refs.cropper.getCroppedCanvas().toDataUrl();
+                        // user.
                         window.location.reload();
                     }
                     this.profile.pictureLoading = false;
                 }).catch((error) => {
                     this.profile.pictureLoading = false;
                     this.profile.formMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message;
+                this.profile.formMessageType = "danger"
                 });
             })
 
