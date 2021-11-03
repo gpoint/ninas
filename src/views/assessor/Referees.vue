@@ -71,7 +71,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button type="submit" ref="refereeFormSubmitButton"></button>
+                                            <button type="submit" ref="refereeFormSubmitButton" class="d-none"></button>
                                         </div>
                                     </form>
                                     <template v-slot:footer>
@@ -275,12 +275,12 @@ export default {
                 description: this.refereeModel.description,
             };
 
-            AssessorService.addReferee(model).then((response) => {
+            AssessorService.addPortfolio(model).then((response) => {
 
                 this.newReferee = {}
                 this.refereeIndex = 0;
                 this.addInProgress = false;
-                this.refereeList = this.sortRefereeList(response.data.result.referees);
+                this.refereeList = this.sortRefereeList(response.data.result.portfolio);
             }).catch((error) => {
                 this.addInProgress = false;
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
@@ -292,11 +292,11 @@ export default {
 
             this.deleteInProgress = referee.index;
 
-            AssessorService.deleteReferee(referee.index).then((response) => {
+            AssessorService.deletePortfolio(referee.index).then((response) => {
 
                 this.refereeIndex = 0;
                 this.deleteInProgress = {};
-                this.refereeList = this.sortRefereeList(response.data.result.referees);
+                this.refereeList = this.sortRefereeList(response.data.result.portfolio);
             }).catch((error) => {
                 this.deleteInProgress = {};
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
@@ -311,7 +311,7 @@ export default {
     mounted() {
         AssessorService.getProfile().then((response) => {
 
-            this.refereeList = this.sortRefereeList(response.data.result.referees);
+            this.refereeList = this.sortRefereeList(response.data.result.portfolio);
         })
     },
 };

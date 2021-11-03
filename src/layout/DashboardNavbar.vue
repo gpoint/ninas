@@ -27,7 +27,6 @@
                     <i class="ni ni-bell-55 text-danger"></i>
                     <span>Notifications</span>
                     <badge class="ml-2" type="danger">1</badge>
-                    <badge class="ml-1" type="info">2</badge>
                     <badge class="ml-1" type="success">3</badge>
                 </router-link>
                 <router-link to="/account" class="dropdown-item">

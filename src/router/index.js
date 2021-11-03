@@ -8,8 +8,8 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 
-//Admin Views
-import Dashboard from "../views/Dashboard.vue";
+//Protected Views
+import Notifications from "../views/Notifications.vue";
 
 //Assessor Views
 import AssessorProfile from "../views/AssessorProfile.vue";
@@ -21,14 +21,9 @@ import Assessors from "../views/Assessors.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/profile",
     component: DashboardLayout,
     children: [
-      {
-        path: "/dashboard",
-        name: "dashboard",
-        components: { default: Dashboard },
-      },
       {
         path: "/account",
         name: "account",
@@ -43,6 +38,11 @@ const routes = [
         path: "/assessors",
         name: "assessors",
         components: { default: Assessors },
+      },
+      {
+        path: "/notifications",
+        name: "notifications",
+        components: { default: Notifications },
       },
     ],
   },
@@ -80,7 +80,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const pages = {
     PUBLIC: ["login", "register", "home", "support"],
-    PROTECTED: ["account"],
+    PROTECTED: ["account", "notifications"],
     ASSESSOR: ["assessor", "experience", "education", "referees"],
     ZONAL_COORDINATOR: ["zonal-coordinator"],
     MANAGER: ["manager"],

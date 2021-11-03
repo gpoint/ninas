@@ -10,6 +10,10 @@ class AssessorService {
     return axios.get(API_URL + "assessor", { headers: authHeader() });
   }
 
+  getAssessor(userId) {
+    return axios.get(API_URL + "assessor/user/" + userId, { headers: authHeader() });
+  }
+
   saveProfile(assessor) {
     return axios.put(API_URL + "assessor", assessor, {
       headers: authHeader(),
@@ -91,21 +95,21 @@ class AssessorService {
     });
   }
 
-  // Referees
-  addReferee(referee) {
-    return axios.post(API_URL + "assessor/referee", referee, {
+  // Portfolios
+  addPortfolio(portfolio) {
+    return axios.post(API_URL + "assessor/portfolio", portfolio, {
       headers: authHeader(),
     });
   }
 
-  updateReferee(index, referee) {
-    return axios.put(API_URL + "assessor/referee/" + index, referee, {
+  updatePortfolio(index, portfolio) {
+    return axios.put(API_URL + "assessor/portfolio/" + index, portfolio, {
       headers: authHeader(),
     });
   }
 
-  deleteReferee(index) {
-    return axios.delete(API_URL + "assessor/referee/" + index, {
+  deletePortfolio(index) {
+    return axios.delete(API_URL + "assessor/portfolio/" + index, {
       headers: authHeader(),
     });
   }

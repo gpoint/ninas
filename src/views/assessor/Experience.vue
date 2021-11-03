@@ -23,7 +23,7 @@
                                                     <base-input :required="true" alternative="" label="Position" placeholder="What role did you play?" input-classes="form-control-alternative" v-model:value="experienceModel.position" />
                                                 </div>
                                                 <div class="col-md-7">
-                                                    <base-input alternative="" label="Company / Project" placeholder="Where did you work?" input-classes="form-control-alternative" v-model:value="experienceModel.company" />
+                                                    <base-input :required="true" alternative="" label="Company / Project" placeholder="Where did you work?" input-classes="form-control-alternative" v-model:value="experienceModel.company" />
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -44,7 +44,7 @@
                                                     <base-input :required="true" alternative="" pattern="[1-2][09][0129][0-9]" label="Start Year" placeholder="Start Year" input-classes="form-control-alternative" v-model:value="experienceModel.startYear" />
                                                 </div>
                                                 <div class="col-md-6 mb-3 pt-3">
-                                                    <base-checkbox :required="true" v-model:checked="experienceModel.currentlyWorking" class="custom-control-alternative pt-4">
+                                                    <base-checkbox v-model:checked="experienceModel.currentlyWorking" class="custom-control-alternative pt-4">
                                                         <span class="text-info">
                                                             Are you still working here?
                                                         </span>

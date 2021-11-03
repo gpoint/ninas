@@ -24,9 +24,8 @@
         <div>
             <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
                 <template v-slot:header>
-                    <h3 class="mb-0">Assessors Table</h3>
+                    <h3 class="mb-0">Sent Notifications Table</h3>
                     <p class="text-sm mb-0">
-                        This is a searchable table of assessors. You can search with the name, standard, scope or sub-scopes description
                     </p>
                 </template>
                 <div class="px-3">
@@ -78,12 +77,9 @@
         <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
             <template v-slot:header>
                 <div class="text-muted text-left mb--5">
-                    <h3>Assessor Information  </h3>
+                    <h3>Notifications</h3>
                 </div>
                 <div class="float-right mb--5">
-                    <base-button type="success" @click="modals.showNotificationModal = true" class="btn-sm m-0 mr-3  ">
-                        Send Notification
-                    </base-button>
                     <base-button type="danger" @click="modals.showUserModal = false" class="btn-sm m-0 ">
                         Close
                     </base-button>
@@ -154,7 +150,7 @@
                                                     <div class="form-group">
                                                         <base-input alternative="" :label="'About ' + modals.row.name">
                                                             <textarea rows="4" readonly v-model="modals.row.description" class="form-control bg-white form-control-alternative" placeholder="A few words about why you should receive the award ..."></textarea>
-                                                        </base-input>
+                                                      fx  </base-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -204,45 +200,15 @@
                                         <div class="pl-2 mt--2">
                                             <div class="row mb-2">
                                                 <div class="col-md-12">
-                                                    <span> {{ exp.position }} <strong class="small">at</strong> {{ exp.company }}</span>
+                                                    <strong> {{ exp.position }} </strong>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12 small">
-                                                    <strong>Location: </strong><span class="small"> {{ exp.location }}</span>
-                                                    <br>
-                                                    <strong>Description: </strong><span class="small">{{exp.description}}</span>
+                                                <div class="col-12">
+                                                    {{ exp.company }},
+                                                    <strong> {{ exp.location }} </strong>
                                                 </div>
                                                 <strong class="col-12 heading-small text-left">{{ "From: " + exp.startMonth + ", " + exp.startYear }} - {{ exp.currentlyWorking ? "Present" : exp.endMonth + ", " + exp.endYear }}</strong>
-                                            </div>
-                                            <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="card shadow mt-3">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 my--2" :class="modals.row.cabexperience.length == 0? 'text-danger' : 'text-muted'">
-                                        {{ modals.row.cabexperience.length == 0? modals.row.name + ' has not saved any ' : '3. ' }} CAB Experience & Assessment History
-                                    </h6>
-                                </div>
-                                <div class="card-body" v-if="modals.row.cabexperience.length != 0">
-                                    <div v-for="(exp, index) in modals.row.cabexperience" :key="index">
-                                        <div class="pl-2 mt--2">
-                                            <div class="row mb-2">
-                                                <div class="col-md-12">
-                                                    <span> {{ exp.position }} <strong class="small">at</strong> {{ exp.company }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 small">
-                                                    <strong>Location: </strong><span class="small"> {{ exp.location }}</span>
-                                                    <br>
-                                                    <strong>Description: </strong><span class="small">{{exp.description}}</span>
-                                                </div>
-                                                <strong class="col-12 heading-small text-left">{{ "On: " + exp.startDay + " " +exp.startMonth + ", " + exp.startYear }} </strong>
                                             </div>
                                             <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
                                         </div>

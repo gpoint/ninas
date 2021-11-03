@@ -29,7 +29,7 @@
                                                         </select>
                                                     </div>                                                </div>
                                                 <div class="col-md-8">
-                                                    <base-input alternative="" label="C A B Name" placeholder="Where did you do your assessment?" input-classes="form-control-alternative" v-model:value="experienceModel.company" />
+                                                    <base-input :required="true" alternative="" label="C A B Name" placeholder="Where did you do your assessment?" input-classes="form-control-alternative" v-model:value="experienceModel.company" />
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -38,7 +38,17 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <label class="form-control-label">Start Month</label>
+                                                        <label class="form-control-label">Day <span>*</span></label>
+                                                        <select :required="true" class="form-control form-control-alternative" v-model="experienceModel.startDay" style="width: 100%">
+                                                            <option v-for="month in 31" :key="month" :value="month">
+                                                                {{ month }}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Month <span>*</span></label>
                                                         <select :required="true" class="form-control form-control-alternative" v-model="experienceModel.startMonth" style="width: 100%">
                                                             <option v-for="month in months" :key="month" :value="month">
                                                                 {{ month }}
@@ -47,22 +57,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <base-input :required="true" alternative="" pattern="[1-2][09][0129][0-9]" label="Start Year" placeholder="Start Year" input-classes="form-control-alternative" v-model:value="experienceModel.startYear" />
+                                                    <base-input :required="true" alternative="" pattern="[1-2][09][0129][0-9]" label="Year" placeholder="Year" input-classes="form-control-alternative" v-model:value="experienceModel.startYear" />
                                                 </div>
                                                 <div class="col-md-1">
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label class="form-control-label">End Month</label>
-                                                        <select :required="true" class="form-control form-control-alternative" v-model="experienceModel.endMonth" style="width: 100%">
-                                                            <option v-for="month in months" :key="month" :value="month">
-                                                                {{ month }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <base-input :required="true" alternative="" pattern="[1-2][09][0129][0-9]" label="End Year" placeholder="End Year" input-classes="form-control-alternative" v-model:value="experienceModel.endYear" />
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -148,9 +145,7 @@
                         <div class="card shadow" @mouseenter="experience.showDelete = true" @mouseleave="experience.showDelete = false">
                             <div class="card-header">
                                 <h6 class="heading-small col-7 col-sm-11 text-muted my--2">
-                                    {{ experience.startMonth + ", " + experience.startYear }}
-                                    -
-                                    {{ experience.currentlyWorking ? "Present" : experience.endMonth + ", " + experience.endYear }}
+                                    {{ experience.startDay + " "  + experience.startMonth + ", " + experience.startYear }}
                                 </h6>
                                 <div class="float-right my--3">
                                     <base-button :class="experience.showDelete?'':'d-none'" :loading="deleteInProgress == experience.index" :disabled="editInProgress == experience.index" type="link" class="text-danger btn-sm my--3" @click="experienceIndex = index; modals.showDeleteExperienceModal = true;">

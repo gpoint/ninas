@@ -118,7 +118,7 @@
 
                     <form>
                         <form-message v-model:type="profile.formMessageType" v-model:message="profile.formMessage"></form-message>
-                        <h6 class="heading-small text-muted mb-4">Assessor information</h6>
+                        <h6 class="heading-small text-muted mb-4">Assessor Information</h6>
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-md-4">
@@ -188,7 +188,7 @@
                         </div>
                         <hr class="my-4" />
                         <!-- Description -->
-                        <h6 class="heading-small text-muted mb-4">Contestant Details</h6>
+                        <h6 class="heading-small text-muted mb-4">Assessor Details</h6>
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-12">

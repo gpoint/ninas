@@ -21,12 +21,62 @@
     </base-header>
     <div class="container-fluid mt--7">
 
-        <div>
+        <div v-if="user.role == 'ADMINISTRATOR'">
             <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
                 <template v-slot:header>
-                    <h3 class="mb-0">Assessors Table</h3>
+                    <h3 class="mb-0">Sent Notifications Table</h3>
                     <p class="text-sm mb-0">
-                        This is a searchable table of assessors. You can search with the name, standard, scope or sub-scopes description
+                    </p>
+                </template>
+                <div class="px-3">
+                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+                        <el-select class="select-primary pagination-select" v-model="pagination.perPage" placeholder="Per page">
+                            <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item" :value="item">
+                            </el-option>
+                        </el-select>
+
+                        <el-input type="search" class="mb-3 col-md-5" clearable prefix-icon="el-icon-search" style="width: 200px" placeholder="Filter Records" v-model="searchQuery" aria-controls="datatables">
+                        </el-input>
+                    </div>
+                    <el-table :data="notificationsSent" row-key="id" header-row-class-name="thead-light">
+                        <el-table-column v-for="column in tableColumnsForSentNotifications" :key="column.label" v-bind="column" sortable>
+                        </el-table-column>
+                        <el-table-column class="d-none" align="left">
+                            <template v-slot:default="props">
+                                <div class="d-none">
+                                    {{props.row.portfolioSummary}}
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="80px" align="left" label="Actions">
+                            <template v-slot:default="props">
+                                <div class="d-flex">
+                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" type="default" size="sm" icon>
+                                        <i class="text-white ni ni-badge"></i>
+                                    </base-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <template v-slot:footer>
+                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+                        <div class="">
+                            <p class="card-category">
+                                Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+                            </p>
+                        </div>
+                        <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage" :total="total">
+                        </base-pagination>
+                    </div>
+                </template>
+            </card>
+        </div>
+        <div >
+            <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
+                <template v-slot:header>
+                    <h3 class="mb-0">Received Notifications Table</h3>
+                    <p class="text-sm mb-0">
                     </p>
                 </template>
                 <div class="px-3">
@@ -78,12 +128,9 @@
         <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
             <template v-slot:header>
                 <div class="text-muted text-left mb--5">
-                    <h3>Assessor Information  </h3>
+                    <h3>Notifications</h3>
                 </div>
                 <div class="float-right mb--5">
-                    <base-button type="success" @click="modals.showNotificationModal = true" class="btn-sm m-0 mr-3  ">
-                        Send Notification
-                    </base-button>
                     <base-button type="danger" @click="modals.showUserModal = false" class="btn-sm m-0 ">
                         Close
                     </base-button>
@@ -154,7 +201,7 @@
                                                     <div class="form-group">
                                                         <base-input alternative="" :label="'About ' + modals.row.name">
                                                             <textarea rows="4" readonly v-model="modals.row.description" class="form-control bg-white form-control-alternative" placeholder="A few words about why you should receive the award ..."></textarea>
-                                                        </base-input>
+                                                      fx  </base-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -204,45 +251,15 @@
                                         <div class="pl-2 mt--2">
                                             <div class="row mb-2">
                                                 <div class="col-md-12">
-                                                    <span> {{ exp.position }} <strong class="small">at</strong> {{ exp.company }}</span>
+                                                    <strong> {{ exp.position }} </strong>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12 small">
-                                                    <strong>Location: </strong><span class="small"> {{ exp.location }}</span>
-                                                    <br>
-                                                    <strong>Description: </strong><span class="small">{{exp.description}}</span>
+                                                <div class="col-12">
+                                                    {{ exp.company }},
+                                                    <strong> {{ exp.location }} </strong>
                                                 </div>
                                                 <strong class="col-12 heading-small text-left">{{ "From: " + exp.startMonth + ", " + exp.startYear }} - {{ exp.currentlyWorking ? "Present" : exp.endMonth + ", " + exp.endYear }}</strong>
-                                            </div>
-                                            <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="card shadow mt-3">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 my--2" :class="modals.row.cabexperience.length == 0? 'text-danger' : 'text-muted'">
-                                        {{ modals.row.cabexperience.length == 0? modals.row.name + ' has not saved any ' : '3. ' }} CAB Experience & Assessment History
-                                    </h6>
-                                </div>
-                                <div class="card-body" v-if="modals.row.cabexperience.length != 0">
-                                    <div v-for="(exp, index) in modals.row.cabexperience" :key="index">
-                                        <div class="pl-2 mt--2">
-                                            <div class="row mb-2">
-                                                <div class="col-md-12">
-                                                    <span> {{ exp.position }} <strong class="small">at</strong> {{ exp.company }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 small">
-                                                    <strong>Location: </strong><span class="small"> {{ exp.location }}</span>
-                                                    <br>
-                                                    <strong>Description: </strong><span class="small">{{exp.description}}</span>
-                                                </div>
-                                                <strong class="col-12 heading-small text-left">{{ "On: " + exp.startDay + " " +exp.startMonth + ", " + exp.startYear }} </strong>
                                             </div>
                                             <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
                                         </div>
@@ -301,7 +318,7 @@ import {
 } from "element-plus";
 import BasePagination from "@/components/BasePagination";
 import swal from "sweetalert2";
-import AssessorService from "../api/services/assessor.service";
+import NotificationsService from "../api/services/notifications.service";
 import BaseInput from '../components/BaseInput.vue';
 
 export default {
@@ -344,6 +361,27 @@ export default {
 
             return result.slice(this.from, this.to);
         },
+        tableColumnsForSentNotifications() {
+
+            if (!this.searchQueryForSentNotifications) {
+                return this.pagedData;
+            }
+            let result = this.tableDataForSentNotifications.filter((row) => {
+                let isIncluded = false;
+                for (let key of this.propsToSearchForSentNotifications) {
+                    let rowValue = (row[key] + "").toLowerCase().toString();
+                    if (
+                        rowValue.includes &&
+                        rowValue.includes(this.searchQueryForSentNotifications.toLowerCase())
+                    ) {
+                        isIncluded = true;
+                    }
+                }
+                return isIncluded;
+            });
+
+            return result.slice(this.from, this.to);
+        },
         to() {
             let highBound = this.from + this.pagination.perPage;
             if (this.total < highBound) {
@@ -353,6 +391,9 @@ export default {
         },
         from() {
             return this.pagination.perPage * (this.pagination.currentPage - 1);
+        },
+        user() {
+            return JSON.parse(window.localStorage.getItem("user")).user;
         },
         total() {
             return this.searchedData.length > 0 ?
@@ -407,7 +448,7 @@ export default {
         handleView(index, row) {
             row.loading = true;
 
-            AssessorService.getAssessor(row.id).then((response) => {
+            NotificationsService.getAssessor(row.id).then((response) => {
 
                 row.loading = false;
                 this.modals.showUserModal = true;
@@ -472,8 +513,11 @@ export default {
         },
     },
     mounted() {
-        AssessorService.getAssessors().then((response) => {
+        NotificationsService.getNotifications().then((response) => {
             this.tableData = response.data.result;
+        });
+        NotificationsService.getSentNotifications().then((response) => {
+            this.tableDataForSentNotifications = response.data.result;
         });
     },
 

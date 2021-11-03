@@ -41,6 +41,14 @@
             }" />
 
             <sidebar-item :link="{
+              name: 'Notifications',
+              icon: 'ni ni-bell-55 ' + notificationsTxtColor,
+              path: '/notifications',
+            }" >
+                    <badge class="ml-2" type="danger">1</badge>
+            </sidebar-item>
+
+            <sidebar-item :link="{
               name: 'Account',
               icon: 'ni ni-briefcase-24 text-default',
               path: '/account',
@@ -76,6 +84,10 @@ export default {
     computed: {
       user(){
         return JSON.parse(localStorage.getItem("user")).user
+      },
+
+      notificationsTxtColor(){
+        return this.user.notifications.length == 0 ? 'text-grey' : 'text-danger'
       }
     },
     methods: {
