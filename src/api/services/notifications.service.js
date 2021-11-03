@@ -14,7 +14,7 @@ class NotificationService {
     return axios.get(API_URL + "notifications/" + notificationId, { headers: authHeader() });
   }
 
-  getSentNotifications() {
+  getSentNotifications () {
     return axios.get(API_URL + "notifications/sent", { headers: authHeader() });
   }
 

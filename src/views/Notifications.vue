@@ -361,10 +361,10 @@ export default {
 
             return result.slice(this.from, this.to);
         },
-        tableColumnsForSentNotifications() {
+        queriedDataForSentNotifications() {
 
             if (!this.searchQueryForSentNotifications) {
-                return this.pagedData;
+                return this.pagedDataForSentNotifications;
             }
             let result = this.tableDataForSentNotifications.filter((row) => {
                 let isIncluded = false;
@@ -380,7 +380,7 @@ export default {
                 return isIncluded;
             });
 
-            return result.slice(this.from, this.to);
+            return result.slice(this.fromForSentNotifications, this.toForSentNotifications);
         },
         to() {
             let highBound = this.from + this.pagination.perPage;
@@ -392,6 +392,16 @@ export default {
         from() {
             return this.pagination.perPage * (this.pagination.currentPage - 1);
         },
+        toForSentNotifications() {
+            let highBound = this.fromForSentNotifications + this.paginationForSentNotifications.perPage;
+            if (this.totalForSentNotifications < highBound) {
+                highBound = this.total;
+            }
+            return highBound;
+        },
+        fromForSentNotifications() {
+            return this.paginationForSentNotifications.perPage * (this.paginationfromForSentNotifications.currentPage - 1);
+        },
         user() {
             return JSON.parse(window.localStorage.getItem("user")).user;
         },
@@ -399,6 +409,11 @@ export default {
             return this.searchedData.length > 0 ?
                 this.searchedData.length :
                 this.tableData.length;
+        },
+        totalForSentNotifications() {
+            return this.searchedDataForSentNotifications.length > 0 ?
+                this.searchedDataForSentNotifications.length :
+                this.tableDataForSentNotifications.length;
         },
 
     },
@@ -414,7 +429,7 @@ export default {
             searchQuery: "",
             propsToSearch: ["firstname", "lastname", "email", "portfolioSummary", ],
             tableColumns: [{
-                    prop: "firstName",
+                    prop: "senderName",
                     label: "First name",
                     minWidth: 125,
                 },
@@ -440,6 +455,7 @@ export default {
                 },
             ],
             tableData: [],
+            tableDataForSentNotifications: [],
             fuseSearch: null,
             searchedData: [],
         };
