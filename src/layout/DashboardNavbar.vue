@@ -26,8 +26,7 @@
                 <router-link to="/notifications" class="dropdown-item">
                     <i class="ni ni-bell-55 text-danger"></i>
                     <span>Notifications</span>
-                    <badge class="ml-2" type="danger">1</badge>
-                    <badge class="ml-1" type="success">3</badge>
+                    <badge v-show="user.notifications.length > 0" class="ml-3" type="info">{{user.notifications.length}}</badge>
                 </router-link>
                 <router-link to="/account" class="dropdown-item">
                     <i class="ni ni-settings-gear-65 text-gray"></i>
@@ -54,7 +53,9 @@
 export default {
     data() {
         return {
-            user: {},
+            user: {
+                notifications: []
+            },
             activeNotifications: false,
             showMenu: false,
             searchQuery: "",

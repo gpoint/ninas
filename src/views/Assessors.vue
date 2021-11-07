@@ -74,14 +74,72 @@
             </card>
         </div>
     </div>
+    <modal v-if="modals.row != null" v-model:show="modals.showNotificationModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
+        <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
+            <template v-slot:header>
+                <div class="text-muted text-left mb--5">
+                    <h3>Send Notification To {{ modals.row.firstName + " " + modals.row.lastName}} </h3>
+                </div>
+            </template>
+            <form role="form" @submit.prevent="sendNotification();">
+                <div class="">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-control-label">Notification Type <span>*</span></label>
+                                <select :required="true" class="form-control form-control-alternative" v-model="modals.notificationModel.type" style="width: 100%">
+                                    <option v-for="type in ['Regular Notification', 'Documentation Error Alert', 'Assessment Job Notification']" :key="type" :value="type">
+                                        {{ type }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <base-input :required="true" alternative="" label="Notification Title" :placeholder="'What are you notifying ' + modals.row.firstName + ' about?'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.title" />
+                        </div>
+                    </div>
+                    <div class="row" v-if="modals.notificationModel.type == 'Assessment Job Notification'">
+                        <div class="col-md-6">
+                            <base-input :required="true" type="date" alternative="" label="Assessment Date" :placeholder="'Assessment Date'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.assessmentDate" />
+                        </div>
+                        <div class="col-md-6">
+                            <base-input :required="true" type="date" alternative="" label="Acceptance Deadline" :placeholder="'Acceptance Deadline'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.acceptanceDeadline" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <base-input alternative="" label="Description">
+                                    <textarea v-if="modals.notificationModel.type == 'Documentation Error Alert'" required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Fill in the documentation error that needs to be attended to."></textarea>
+                                    <textarea v-else-if="modals.notificationModel.type == 'Assessment Job Notification'" required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Type in the description of the Job including the standard, scope and possible sub-scopes to be assessed."></textarea>
+                                    <textarea v-else required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Type in your message."></textarea>
+                                </base-input>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="d-none" ref="notificationFormSubmitButton" type="submit"></button>
+                </div>
+            </form>
+            <template v-slot:footer>
+                <div class="">
+                    <base-button type="warning" @click=" modals.showNotificationModal = false" class="my-1">
+                        Close
+                    </base-button>
+                    <base-button type="info" @click="$refs.notificationFormSubmitButton.click();" class="my-1 float-right">
+                        Save
+                    </base-button>
+                </div>
+            </template>
+        </card>
+    </modal>
     <modal v-model:show="modals.showUserModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
         <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
             <template v-slot:header>
                 <div class="text-muted text-left mb--5">
-                    <h3>Assessor Information  </h3>
+                    <h3>Assessor Information </h3>
                 </div>
                 <div class="float-right mb--5">
-                    <base-button type="success" @click="modals.showNotificationModal = true" class="btn-sm m-0 mr-3  ">
+                    <base-button type="success" @click="modals.showUserModal = false; modals.showNotificationModal = true" class="btn-sm m-0 mr-3  ">
                         Send Notification
                     </base-button>
                     <base-button type="danger" @click="modals.showUserModal = false" class="btn-sm m-0 ">
@@ -302,6 +360,7 @@ import {
 import BasePagination from "@/components/BasePagination";
 import swal from "sweetalert2";
 import AssessorService from "../api/services/assessor.service";
+import NotificationsService from "../api/services/notifications.service";
 import BaseInput from '../components/BaseInput.vue';
 
 export default {
@@ -363,7 +422,9 @@ export default {
     },
     data() {
         return {
-            modals: {},
+            modals: {
+                notificationModel: {},
+            },
             pagination: {
                 perPage: 10,
                 currentPage: 1,
@@ -404,6 +465,19 @@ export default {
         };
     },
     methods: {
+        sendNotification() {
+
+            this.modals.showNotificationModal = false;
+            this.modals.notificationModel.userId = this.modals.row.userId;
+
+            NotificationsService.sendNotification(this.modals.notificationModel).then((response) => {
+                // 
+            }).catch((error) => {
+                // 
+            }).finally(() => {
+                this.notificationModel = {};
+            });
+        },
         handleView(index, row) {
             row.loading = true;
 
@@ -412,11 +486,10 @@ export default {
                 row.loading = false;
                 this.modals.showUserModal = true;
                 this.modals.row = response.data.result;
+                this.modals.row.userId = row.id
                 this.modals.row.firstName = row.firstName;
                 this.modals.row.lastName = row.lastName;
                 this.modals.row.name = row.firstName + " " + row.lastName;
-                // this.modals.row.firstName = row.firstName;
-                // this.modals.row.firstName = row.firstName;
             }).catch((error) => {
 
                 row.loading = false;

@@ -21,58 +21,7 @@
     </base-header>
     <div class="container-fluid mt--7">
 
-        <div v-if="user.role == 'ADMINISTRATOR'">
-            <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
-                <template v-slot:header>
-                    <h3 class="mb-0">Sent Notifications Table</h3>
-                    <p class="text-sm mb-0">
-                    </p>
-                </template>
-                <div class="px-3">
-                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-                        <el-select class="select-primary pagination-select" v-model="pagination.perPage" placeholder="Per page">
-                            <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item" :value="item">
-                            </el-option>
-                        </el-select>
-
-                        <el-input type="search" class="mb-3 col-md-5" clearable prefix-icon="el-icon-search" style="width: 200px" placeholder="Filter Records" v-model="searchQuery" aria-controls="datatables">
-                        </el-input>
-                    </div>
-                    <el-table :data="notificationsSent" row-key="id" header-row-class-name="thead-light">
-                        <el-table-column v-for="column in tableColumnsForSentNotifications" :key="column.label" v-bind="column" sortable>
-                        </el-table-column>
-                        <el-table-column class="d-none" align="left">
-                            <template v-slot:default="props">
-                                <div class="d-none">
-                                    {{props.row.portfolioSummary}}
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column min-width="80px" align="left" label="Actions">
-                            <template v-slot:default="props">
-                                <div class="d-flex">
-                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" type="default" size="sm" icon>
-                                        <i class="text-white ni ni-badge"></i>
-                                    </base-button>
-                                </div>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <template v-slot:footer>
-                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-                        <div class="">
-                            <p class="card-category">
-                                Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
-                            </p>
-                        </div>
-                        <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage" :total="total">
-                        </base-pagination>
-                    </div>
-                </template>
-            </card>
-        </div>
-        <div >
+        <div>
             <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
                 <template v-slot:header>
                     <h3 class="mb-0">Received Notifications Table</h3>
@@ -92,18 +41,11 @@
                     <el-table :data="queriedData" row-key="id" header-row-class-name="thead-light">
                         <el-table-column v-for="column in tableColumns" :key="column.label" v-bind="column" sortable>
                         </el-table-column>
-                        <el-table-column class="d-none" align="left">
-                            <template v-slot:default="props">
-                                <div class="d-none">
-                                    {{props.row.portfolioSummary}}
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column min-width="80px" align="left" label="Actions">
+                        <el-table-column min-width="80px" align="left" label="View">
                             <template v-slot:default="props">
                                 <div class="d-flex">
-                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" type="default" size="sm" icon>
-                                        <i class="text-white ni ni-badge"></i>
+                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" :type="props.row.read == true? 'info' : 'danger'" size="sm" icon>
+                                        <i class="text-white ni ni-bell-55"></i>
                                     </base-button>
                                 </div>
                             </template>
@@ -124,187 +66,103 @@
             </card>
         </div>
     </div>
-    <modal v-model:show="modals.showUserModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
-        <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
-            <template v-slot:header>
-                <div class="text-muted text-left mb--5">
-                    <h3>Notifications</h3>
-                </div>
-                <div class="float-right mb--5">
-                    <base-button type="danger" @click="modals.showUserModal = false" class="btn-sm m-0 ">
-                        Close
-                    </base-button>
-                </div>
-            </template>
-            <form role="form" v-if="modals.row != null">
-                <div class="">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card shadow">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 text-muted my--2">
-                                        1. General Information
-                                    </h6>
-                                </div>
-                                <div class="card-body">
+    <div class="container-fluid mt-5">
+        <div v-if="user.role == 'ADMINISTRATOR'">
+            <card class="no-border-card" body-classes="px-0 pb-1" footer-classes="pb-2">
+                <template v-slot:header>
+                    <h3 class="mb-0">Sent Notifications Table</h3>
+                    <p class="text-sm mb-0">
+                    </p>
+                </template>
+                <div class="px-3">
+                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+                        <el-select class="select-primary pagination-select" v-model="paginationForSentNotifications.perPage" placeholder="Per page">
+                            <el-option class="select-primary" v-for="item in paginationForSentNotifications.perPageOptions" :key="item" :label="item" :value="item">
+                            </el-option>
+                        </el-select>
 
-                                    <form>
-                                        <h6 class="heading-small text-muted mb-4">User information</h6>
-                                        <div class="pl-lg-4">
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <base-input alternative="" label="First name" :readonly="true" input-classes="form-control-alternative" :value="modals.row.firstName" />
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <base-input alternative="" label="Last name" :readonly="true" input-classes="form-control-alternative" :value="modals.row.lastName" />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <base-input alternative="" label="Gender" :readonly="true" input-classes="form-control-alternative" :value="modals.row.gender" />
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <base-input alternative="" type="date" label="Date Of Birth" :readonly="true" input-classes="form-control-alternative" v-model:value="modals.row.dateOfBirth" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr class="my-4" />
-                                        <!-- Address -->
-                                        <h6 class="heading-small text-muted mb-4">
-                                            Residence Information
-                                        </h6>
-                                        <div class="pl-lg-4">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <base-input alternative="" label="Home Address" :readonly="true" input-classes="form-control-alternative" :value="modals.row.address" />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <base-input alternative="" label="Resident City" :readonly="true" input-classes="form-control-alternative" :value="modals.row.city" />
-                                                </div>
-                                                <div class="col-lg-4">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <base-input alternative="" label="Resident State" :readonly="true" input-classes="form-control-alternative" :value="modals.row.stateOfResidence" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr class="my-4" />
-                                        <!-- Description -->
-                                        <h6 class="heading-small text-muted mb-4">
-                                            Basic Assessor Details
-                                        </h6>
-                                        <div class="pl-lg-4">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="form-group">
-                                                        <base-input alternative="" :label="'About ' + modals.row.name">
-                                                            <textarea rows="4" readonly v-model="modals.row.description" class="form-control bg-white form-control-alternative" placeholder="A few words about why you should receive the award ..."></textarea>
-                                                      fx  </base-input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                        <el-input type="search" class="mb-3 col-md-5" clearable prefix-icon="el-icon-search" style="width: 200px" placeholder="Filter Records" v-model="searchQuery" aria-controls="datatables">
+                        </el-input>
+                    </div>
+                    <el-table :data="queriedDataForSentNotifications" row-key="id" header-row-class-name="thead-light">
+                        <el-table-column v-for="column in tableColumnsForSentNotifications" :key="column.label" v-bind="column" sortable>
+                        </el-table-column>
+                        <el-table-column min-width="80px" align="left" label="View">
+                            <template v-slot:default="props">
+                                <div class="d-flex">
+                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" :type="props.row.read == true? 'default' : 'danger'" size="sm" icon>
+                                        <i class="text-white ni ni-bell-55"></i>
+                                    </base-button>
                                 </div>
-                            </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <template v-slot:footer>
+                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+                        <div class="">
+                            <p class="card-category">
+                                Showing {{ fromForSentNotifications+ 1 }} to {{ toForSentNotifications }} of {{ totalForSentNotifications }} entries
+                            </p>
                         </div>
-                        <div class="col-12">
-                            <div class="card shadow mt-3">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 my--2" :class="modals.row.education.length == 0? 'text-danger' : 'text-muted'">
-                                        {{ modals.row.education.length == 0? modals.row.name + ' has not saved any ' : '2. ' }} Education & Past Schooling
-                                    </h6>
-                                </div>
-                                <div class="card-body" v-if="modals.row.education.length != 0">
-                                    <div v-for="(edu, index) in modals.row.education" :key="index">
-                                        <div class="pl-2 mt--2">
-                                            <div class="row mb-2">
-                                                <div class="col-md-12">
-                                                    <strong> {{ edu.degree }} </strong>,
-                                                    {{ edu.course }}
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    {{ edu.school }},
-                                                    <strong> {{ edu.location }} </strong>
-                                                </div>
-                                                <strong class="col-12 heading-small text-left">{{ "From: " + edu.startMonth + ", " + edu.startYear }} - {{ edu.endMonth + ", " + exp.endYear }}</strong>
-                                            </div>
-                                            <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="card shadow mt-3">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 my--2" :class="modals.row.experience.length == 0? 'text-danger' : 'text-muted'">
-                                        {{ modals.row.experience.length == 0? modals.row.name + ' has not saved any ' : '3. ' }} Experience & Work History
-                                    </h6>
-                                </div>
-                                <div class="card-body" v-if="modals.row.experience.length != 0">
-                                    <div v-for="(exp, index) in modals.row.experience" :key="index">
-                                        <div class="pl-2 mt--2">
-                                            <div class="row mb-2">
-                                                <div class="col-md-12">
-                                                    <strong> {{ exp.position }} </strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    {{ exp.company }},
-                                                    <strong> {{ exp.location }} </strong>
-                                                </div>
-                                                <strong class="col-12 heading-small text-left">{{ "From: " + exp.startMonth + ", " + exp.startYear }} - {{ exp.currentlyWorking ? "Present" : exp.endMonth + ", " + exp.endYear }}</strong>
-                                            </div>
-                                            <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="card shadow mt-3">
-                                <div class="card-header">
-                                    <h6 class="heading-small col-7 col-sm-11 my--2" :class="modals.row.portfolio.length == 0? 'text-danger' : 'text-muted'">
-                                        {{ modals.row.portfolio.length == 0? modals.row.name + ' has not saved any ' : '4. ' }} Portfolio of Standards
-                                    </h6>
-                                </div>
-                                <div class="card-body" v-if="modals.row.portfolio.length != 0">
-                                    <div v-for="(port, index) in modals.row.portfolio" :key="index">
-                                        <div class="pl-2 mt--2">
-                                            <div class="row mb-2">
-                                                <div class="col-md-12">
-                                                    <strong> {{ port.standard + " : : " + port.scope }} </strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <strong class="heading-small">{{ port.description }}</strong>
-                                                </div>
-                                            </div>
-                                            <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <base-pagination class="pagination-no-border" v-model="paginationForSentNotifications.currentPage" :per-page="paginationForSentNotifications.perPage" :total="totalForSentNotifications">
+                        </base-pagination>
+                    </div>
+                </template>
+            </card>
+        </div>
+    </div>
+
+    <modal v-if="modals.row != null" v-model:show="modals.showNotificationModal" :gradient="(modals.row.type == 'Documentation Error Alert')? 'danger' : 'white'" :modal-classes="(modals.row.type == 'Documentation Error Alert')? 'modal-danger' : 'modal-white'  + ' modal-dialog-centered'">
+        <template v-slot:header>
+            <h6 class="modal-title" id="modal-title-notification">
+                Notification Type: {{modals.row.type}}
+            </h6>
+        </template>
+
+        <strong class="heading-small">
+            From: {{modals.row.senderName}}
+        </strong>
+        <div class="text-small" v-if="modals.row.type == 'Assessment Job Notification'">
+
+            <p class="heading-small">
+                Assessment Date {{modals.row.assessmentDate}}
+                <br>
+                Accept Deadline: {{modals.row.acceptanceDeadline}}
+            </p>
+        </div>
+        <div class="py-3 text-center">
+            <i class="ni ni-bell-55 ni-3x"></i>
+            <h4 class="heading mt-4">{{ modals.row.title }}</h4>
+            <div class="pl-2 mt--2">
+                <div class="row mb-2 text-left">
+                    <div class="col-md-12">
+                        <hr class="my-1" />
+                        <strong class="heading-small">
+                            Message:
+                        </strong>
                     </div>
                 </div>
-            </form>
-            <template v-slot:footer>
-                <div class="">
-                    <base-button type="info" @click="modals.showUserModal = false; modals.row.loading = false;" class="my-1 float-right">
-                        Close
-                    </base-button>
+                <div class="row">
+                    <div class="col-12">
+                        {{ modals.row.description }}
+                        <strong>
+                        </strong>
+                    </div>
                 </div>
-            </template>
-        </card>
+            </div>
+        </div>
+
+        <template v-slot:footer>
+            <base-button v-if="modals.row.type == 'Assessment Job Notification'" type="white" @click="deleteExperience();modals.showNotificationModal = false">
+                Accept Offer
+            </base-button>
+            <base-button type="white" text-color="info" class="ml-auto" @click="modals.showNotificationModal = false">
+                Close
+            </base-button>
+        </template>
     </modal>
+
 </div>
 </template>
 
@@ -334,6 +192,9 @@ export default {
     computed: {
         pagedData() {
             return this.tableData.slice(this.from, this.to);
+        },
+        pagedDataForSentNotifications() {
+            return this.tableDataForSentNotifications.slice(this.fromForSentNotifications, this.toForSentNotifications);
         },
         /***
          * Searches through table data and returns a paginated array.
@@ -395,12 +256,12 @@ export default {
         toForSentNotifications() {
             let highBound = this.fromForSentNotifications + this.paginationForSentNotifications.perPage;
             if (this.totalForSentNotifications < highBound) {
-                highBound = this.total;
+                highBound = this.totalForSentNotifications;
             }
             return highBound;
         },
         fromForSentNotifications() {
-            return this.paginationForSentNotifications.perPage * (this.paginationfromForSentNotifications.currentPage - 1);
+            return this.paginationForSentNotifications.perPage * (this.paginationForSentNotifications.currentPage - 1);
         },
         user() {
             return JSON.parse(window.localStorage.getItem("user")).user;
@@ -426,31 +287,55 @@ export default {
                 perPageOptions: [10, 25, 50, 100],
                 total: 0,
             },
+            paginationForSentNotifications: {
+                perPage: 10,
+                currentPage: 1,
+                perPageOptions: [10, 25, 50, 100],
+                total: 0,
+            },
             searchQuery: "",
-            propsToSearch: ["firstname", "lastname", "email", "portfolioSummary", ],
+            searchQueryForSentNotifications: "",
+            propsToSearch: ["title", "type"],
+            propsToSearchForSentNotifications: ["title", "type"],
             tableColumns: [{
-                    prop: "senderName",
-                    label: "First name",
+                    prop: "type",
+                    label: "Type",
                     minWidth: 125,
                 },
                 {
-                    prop: "lastName",
-                    label: "Last name",
+                    prop: "title",
+                    label: "Title",
                     minWidth: 125,
                 },
                 {
-                    prop: "email",
-                    label: "Email",
+                    prop: "description",
+                    label: "Description",
                     minWidth: 150,
                 },
                 {
-                    prop: "phone",
-                    label: "Phone",
-                    minWidth: 100,
+                    prop: "createdAt",
+                    label: "Received",
+                    minWidth: 80,
+                },
+            ],
+            tableColumnsForSentNotifications: [{
+                    prop: "type",
+                    label: "Type",
+                    minWidth: 125,
                 },
                 {
-                    prop: "numberOfAssessments",
-                    label: "Assessments",
+                    prop: "title",
+                    label: "Title",
+                    minWidth: 125,
+                },
+                {
+                    prop: "description",
+                    label: "Description",
+                    minWidth: 150,
+                },
+                {
+                    prop: "createdAt",
+                    label: "Sent",
                     minWidth: 80,
                 },
             ],
@@ -458,26 +343,24 @@ export default {
             tableDataForSentNotifications: [],
             fuseSearch: null,
             searchedData: [],
+            searchedDataForSentNotifications: [],
         };
     },
     methods: {
         handleView(index, row) {
             row.loading = true;
 
-            NotificationsService.getAssessor(row.id).then((response) => {
+            NotificationsService.getNotification(row.id).then((response) => {
 
                 row.loading = false;
-                this.modals.showUserModal = true;
+                this.modals.showNotificationModal = true;
                 this.modals.row = response.data.result;
                 this.modals.row.firstName = row.firstName;
                 this.modals.row.lastName = row.lastName;
                 this.modals.row.name = row.firstName + " " + row.lastName;
-                // this.modals.row.firstName = row.firstName;
-                // this.modals.row.firstName = row.firstName;
             }).catch((error) => {
 
                 row.loading = false;
-                this.modals.showUserModal = false;
             });
 
             this.modals.index = index;
