@@ -34,7 +34,7 @@ class AssessorService {
   }
 
   uploadDegreeCertificate(index, formData) {
-    return axios.put(API_URL + "assessor/education/" + index, formData, {
+    return axios.patch(API_URL + "assessor/education/" + index, formData, {
       headers: authHeader(),
     });
   }

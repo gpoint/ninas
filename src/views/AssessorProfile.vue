@@ -62,7 +62,7 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#" @click.prevent="profile.modals.showPhotoModal=true;" class="image-overlay-wrapper">
-                                    <img :src="user.photoUrl == '' ? 'img/theme/user.jpg' : user.photoUrl" class="rounded-circle user-img" style="width:180px;height:180px;" />
+                                    <img :src="user.photoUrl == null ? 'img/theme/user.jpg' : user.photoUrl" class="rounded-circle user-img" style="width:180px;height:180px;" />
                                     <div class="overlay">
                                         <div class="text"><i class="fa fa-2x fa-camera"></i></div>
                                     </div>
@@ -194,7 +194,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <base-input :disabled="profile.loading" alternative="" label="About Me">
-                                            <textarea rows="4" v-model="profile.model.description" class="form-control form-control-alternative" placeholder="A few words about why you are in the best position receive the award ..."></textarea>
+                                            <textarea rows="4" v-model="profile.model.description" class="form-control form-control-alternative" placeholder="A few words about you..."></textarea>
                                         </base-input>
                                     </div>
                                 </div>
@@ -329,6 +329,11 @@ export default {
                 UserService.uploadProfilePicture(formData).then((response) => {
                     if (response.data.isSuccess) {
                         fetch(response.data.result.photoUrl);
+                        var userObject = localStorage.getItem("user");
+
+                        userObject.user = response.data.result;
+
+                        localStorage.setItem("user", userObject)
                         // this.user.photoUrl = this.$refs.cropper.getCroppedCanvas().toDataUrl();
                         // user.
                         window.location.reload();

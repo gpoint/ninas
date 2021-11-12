@@ -133,7 +133,7 @@
         </card>
     </modal>
     <modal v-model:show="modals.showUserModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
-        <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
+        <card v-if="modals.showUserModal" type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
             <template v-slot:header>
                 <div class="text-muted text-left mb--5">
                     <h3>Assessor Information </h3>
@@ -147,7 +147,7 @@
                     </base-button>
                 </div>
             </template>
-            <form role="form" v-if="modals.row != null">
+            <form role="form" v-if="modals.row != null" style="overlay-y: scroll;">
                 <div class="">
                     <div class="row">
                         <div class="col-12">
@@ -242,7 +242,7 @@
                                                     {{ edu.school }},
                                                     <strong> {{ edu.location }} </strong>
                                                 </div>
-                                                <strong class="col-12 heading-small text-left">{{ "From: " + edu.startMonth + ", " + edu.startYear }} - {{ edu.endMonth + ", " + exp.endYear }}</strong>
+                                                <strong class="col-12 heading-small text-left">{{ "From: " + edu.startMonth + ", " + edu.startYear }} - {{ edu.endMonth + ", " + edu.endYear }}</strong>
                                             </div>
                                             <hr class="mt-0 mb-4" style="border:solid 2px darkgreen;">
                                         </div>

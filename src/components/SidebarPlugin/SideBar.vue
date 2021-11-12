@@ -38,10 +38,10 @@
             <!--Navigation-->
             <ul class="navbar-nav mb-md-3">
                 <li class="nav-item">
-                    <a class="nav-link" href="mailto:support@cstemp.org">
+                    <a class="nav-link" href="mailto:support@ninas.ng">
                         <i class="ni ni-email-83"></i> Send an Email
                     </a>
-                    <a class="nav-link" href="tel:08107758090" title="tel:08107758090">
+                    <a class="nav-link" href="tel:08162952923" title="tel:08107758090">
                         <i class="ni ni-world"></i> Call Support
                     </a>
                 </li>

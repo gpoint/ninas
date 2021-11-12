@@ -9,12 +9,34 @@
                             <div class="col-8">
                                 <h3 class="mb-0">My Education</h3>
                             </div>
+                            <modal v-model:show="modals.showEducationCertificate" v-if="modals.showEducationCertificate" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
+                                <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
+                                    <template v-slot:header>
+                                        <div class="text-muted text-left mb--5">
+                                            <h3> Academic Qualification / Degree Certificate </h3>
+                                        </div>
+                                        <base-button size="sm" type="danger" class="float-right mb--3" @click=" modals.showEducationCertificate = false">
+                                            Close
+                                        </base-button>
+                                    </template>
+                                    <div class="">
+                                        <img :src="educationList[educationIndex].certificateUrl" alt="" style="width: 100% !important;" >
+                                    </div>
+                                    <template v-slot:footer>
+                                        <div class="">
+                                        </div>
+                                    </template>
+                                </card>
+                            </modal>
                             <modal v-model:show="modals.showEducationModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
                                 <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
                                     <template v-slot:header>
                                         <div class="text-muted text-left mb--5">
                                             <h3>{{ addingEducation ? "Add" : "Edit" }} Academic Qualification / Degree</h3>
                                         </div>
+                                        <base-button size="sm" type="danger" class="float-right mb--3" @click=" modals.showEducationModal = false">
+                                            Close
+                                        </base-button>
                                     </template>
                                     <form role="form" @submit.prevent="addingEducation ? addEducation() : editEducation(); modals.showEducationModal = false;">
                                         <div class="">
@@ -81,10 +103,11 @@
                                     </form>
                                     <template v-slot:footer>
                                         <div class="">
-                                            <base-button type="warning" @click=" modals.showEducationModal = false" class="my-1">
-                                                Close
-                                            </base-button>
-                                            <base-button type="info" @click="$refs.educationFormSubmitButton.click();" class="my-1 float-right">
+                                            <label v-if="!addingEducation" :disabled="uploadingCertificate?true:null" class="btn btn-warning">
+                                                <input class="d-none" type="file" ref="educationCertInput" @change="uploadCertificate();">
+                                                Upload Certificate
+                                            </label>
+                                            <base-button :loading="uploadingCertificate" type="info" @click="$refs.educationFormSubmitButton.click();" class="my-1 float-right">
                                                 Save
                                             </base-button>
                                         </div>
@@ -174,9 +197,12 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-8">
                                                 {{ education.school }},
                                                 <strong> {{ education.location }} </strong>
+                                            </div>
+                                            <div v-if="education.certificateUrl != null" class="col-4">
+                                                <base-button size="sm" @click="educationIndex = index;modals.showEducationCertificate = true;">View Certificate</base-button>
                                             </div>
                                         </div>
                                     </div>
@@ -215,20 +241,14 @@ export default {
             addInProgress: false,
             editInProgress: {},
             deleteInProgress: {},
+            uploadingCertificate: false,
             errorMessage: "",
             degreeOptions: [
-                "GSCE",
-                "WASSCE",
-                "NABTEB",
-                "TRADE TEST 1",
-                "TRADE TEST 2",
-                "TRADE TEST 3",
-                "NSQ LEVEL 1",
-                "NSQ LEVEL 2",
-                "NSQ LEVEL 3",
-                "DIPLOMA",
-                "BACHELOR'S",
-                "MASTER'S",
+                "Diploma",
+                "BSc",
+                "MSc",
+                "PhD",
+                "Others",
             ],
             months: [
                 "January",
@@ -268,7 +288,7 @@ export default {
             this.addInProgress = true;
 
             AssessorService.addAcademicDegree(this.newEducation).then((response) => {
-                
+
                 this.newEducation = {}
                 this.educationIndex = 0;
                 this.addInProgress = false;
@@ -285,13 +305,29 @@ export default {
             this.editInProgress = education.index;
 
             AssessorService.updateAcademicDegree(education.index, education).then((response) => {
-                
+
                 this.educationIndex = 0;
                 this.editInProgress = {};
                 this.educationList = this.sortEducationList(response.data.result.education);
             }).catch((error) => {
                 this.editInProgress = {};
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
+            });
+        },
+        uploadCertificate(){
+
+            var formData = new FormData();
+            formData.append("file", this.$refs.educationCertInput.files[0], "photo.jpg");
+
+
+            AssessorService.uploadDegreeCertificate(this.educationIndex, formData).then((response) => {
+                
+                this.uploadingCertificate = false;
+                this.modals.showEducationModal = false;
+                this.educationList = this.sortEducationList(response.data.result.education);
+            }).catch((error) => {
+                this.profile.formMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message;
+                this.uploadingCertificate = false;
             });
         },
         deleteEducation() {
@@ -301,7 +337,7 @@ export default {
             this.deleteInProgress = education.index;
 
             AssessorService.deleteAcademicDegree(education.index).then((response) => {
-                
+
                 this.educationIndex = 0;
                 this.deleteInProgress = {};
                 this.educationList = this.sortEducationList(response.data.result.education);
@@ -318,7 +354,7 @@ export default {
     },
     mounted() {
         AssessorService.getProfile().then((response) => {
-            
+
             this.educationList = this.sortEducationList(response.data.result.education);
         })
     },

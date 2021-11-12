@@ -9,7 +9,7 @@
                             <div class="col-8">
                                 <h3 class="mb-0">My Standards</h3>
                             </div>
-                            <modal v-model:show="modals.showRefereeModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
+                            <modal v-model:show="modals.showRefereeModal" v-if="modals.showRefereeModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
                                 <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
                                     <template v-slot:header>
                                         <div class="text-muted text-left mb--5">
@@ -26,7 +26,7 @@
                                                             <label class="form-control-label">Standard</label>
                                                             <select required class="form-control form-control-alternative" v-model="refereeModel.standard" style="width: 100%">
                                                                 <option v-for="(option, index) in standards" :key="index" :value="index">
-                                                                    {{ option.value }}
+                                                                    {{ option.value}}
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -249,14 +249,6 @@ export default {
         }
     },
     methods: {
-        sortRefereeList(refereeList) {
-            refereeList.forEach((referee, index) => {
-                referee.index = index;
-            });
-            return refereeList.sort(
-                (a, b) => new Date(b.startYear, this.months.indexOf(b.startMonth) + 1) - new Date(a.startYear, this.months.indexOf(a.startMonth) + 1)
-            );
-        },
         addReferee() {
 
             this.addInProgress = true;
@@ -280,7 +272,7 @@ export default {
                 this.newReferee = {}
                 this.refereeIndex = 0;
                 this.addInProgress = false;
-                this.refereeList = this.sortRefereeList(response.data.result.portfolio);
+                this.refereeList = (response.data.result.portfolio);
             }).catch((error) => {
                 this.addInProgress = false;
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
@@ -292,11 +284,11 @@ export default {
 
             this.deleteInProgress = referee.index;
 
-            AssessorService.deletePortfolio(referee.index).then((response) => {
+            AssessorService.deletePortfolio(this.refereeIndex).then((response) => {
 
                 this.refereeIndex = 0;
                 this.deleteInProgress = {};
-                this.refereeList = this.sortRefereeList(response.data.result.portfolio);
+                this.refereeList = (response.data.result.portfolio);
             }).catch((error) => {
                 this.deleteInProgress = {};
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
@@ -311,7 +303,7 @@ export default {
     mounted() {
         AssessorService.getProfile().then((response) => {
 
-            this.refereeList = this.sortRefereeList(response.data.result.portfolio);
+            this.refereeList = (response.data.result.portfolio);
         })
     },
 };
