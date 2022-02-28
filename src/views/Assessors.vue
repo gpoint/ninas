@@ -31,29 +31,135 @@
                 </template>
                 <div class="px-3">
                     <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
-                        <el-select class="select-primary pagination-select" v-model="pagination.perPage" placeholder="Per page">
+                        <el-select @change="loadTable" class="select-primary pagination-select" v-model="pagination.perPage" placeholder="Per page">
                             <el-option class="select-primary" v-for="item in pagination.perPageOptions" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
 
-                        <el-input type="search" class="mb-3 col-md-5" clearable prefix-icon="el-icon-search" style="width: 200px" placeholder="Filter Records" v-model="searchQuery" aria-controls="datatables">
-                        </el-input>
+                        <div class="mb-3 col-sm-5 col-lg-4">
+                            <div class="row">
+                                <el-input type="search" class="col-10" clearable placeholder="Filter Records" v-model="searchQuery" aria-controls="datatables">
+                                </el-input>
+                                <base-button type="default" @click="loadTable">
+                                    <i class="fa fa-search"></i>
+                                </base-button>
+                            </div>
+                        </div>
                     </div>
-                    <el-table :data="queriedData" row-key="id" header-row-class-name="thead-light">
-                        <el-table-column v-for="column in tableColumns" :key="column.label" v-bind="column" sortable>
-                        </el-table-column>
-                        <el-table-column class="d-none" align="left">
+                    <div v-if="loading" class="text-center">
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="lds-grid">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <el-table v-show="!loading" :data=" tableData" row-key="id" header-row-class-name="thead-light">
+                        <el-table-column min-width="80px" align="left" label="Picture">
                             <template v-slot:default="props">
-                                <div class="d-none">
-                                    {{props.row.portfolioSummary}}
-                                </div>
+                                <img :src="props.row.photoUrl || 'img/theme/user.jpg'" style="border: 2px solid rgb(209, 240, 216); border-radius: 50%; object-fit: cover; width: 50px !important; height: 50px !important;">
                             </template>
                         </el-table-column>
-                        <el-table-column min-width="80px" align="left" label="Actions">
+                        <el-table-column v-for="column in tableColumns" :key="column.label" v-bind="column" sortable>
+                        </el-table-column>
+                        <el-table-column min-width="80px" align="left" label="View">
                             <template v-slot:default="props">
                                 <div class="d-flex">
-                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" type="default" size="sm" icon>
-                                        <i class="text-white ni ni-badge"></i>
+                                    <base-button :loading="props.row.loading" @click="handleView(props.$index, props.row)" class="like btn-link" :type="props.row.verified == true? 'info' : 'success'" size="sm" icon>
+                                        <i class="text-white fa fa-pager"></i>
                                     </base-button>
                                 </div>
                             </template>
@@ -61,77 +167,20 @@
                     </el-table>
                 </div>
                 <template v-slot:footer>
-                    <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
+                    <div v-if="!loading" class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
                         <div class="">
                             <p class="card-category">
-                                Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+                                Showing {{ from + 1 }} to {{ to }} of {{ pagination.total }} users
                             </p>
                         </div>
-                        <base-pagination class="pagination-no-border" v-model="pagination.currentPage" :per-page="pagination.perPage" :total="total">
+                        <base-pagination class="pagination-no-border" v-model:value="pagination.currentPage" :per-page="pagination.perPage" :total="pagination.total" @update:value="loadTable">
                         </base-pagination>
                     </div>
                 </template>
             </card>
         </div>
     </div>
-    <modal v-if="modals.row != null" v-model:show="modals.showNotificationModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
-        <card type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
-            <template v-slot:header>
-                <div class="text-muted text-left mb--5">
-                    <h3>Send Notification To {{ modals.row.firstName + " " + modals.row.lastName}} </h3>
-                </div>
-            </template>
-            <form role="form" @submit.prevent="sendNotification();">
-                <div class="">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="form-control-label">Notification Type <span>*</span></label>
-                                <select :required="true" class="form-control form-control-alternative" v-model="modals.notificationModel.type" style="width: 100%">
-                                    <option v-for="type in ['Regular Notification', 'Documentation Error Alert', 'Assessment Job Notification']" :key="type" :value="type">
-                                        {{ type }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <base-input :required="true" alternative="" label="Notification Title" :placeholder="'What are you notifying ' + modals.row.firstName + ' about?'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.title" />
-                        </div>
-                    </div>
-                    <div class="row" v-if="modals.notificationModel.type == 'Assessment Job Notification'">
-                        <div class="col-md-6">
-                            <base-input :required="true" type="date" alternative="" label="Assessment Date" :placeholder="'Assessment Date'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.assessmentDate" />
-                        </div>
-                        <div class="col-md-6">
-                            <base-input :required="true" type="date" alternative="" label="Acceptance Deadline" :placeholder="'Acceptance Deadline'" input-classes="form-control-alternative" v-model:value="modals.notificationModel.acceptanceDeadline" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <base-input alternative="" label="Description">
-                                    <textarea v-if="modals.notificationModel.type == 'Documentation Error Alert'" required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Fill in the documentation error that needs to be attended to."></textarea>
-                                    <textarea v-else-if="modals.notificationModel.type == 'Assessment Job Notification'" required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Type in the description of the Job including the standard, scope and possible sub-scopes to be assessed."></textarea>
-                                    <textarea v-else required rows="4" v-model="modals.notificationModel.description" class="form-control form-control-alternative" placeholder="Type in your message."></textarea>
-                                </base-input>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="d-none" ref="notificationFormSubmitButton" type="submit"></button>
-                </div>
-            </form>
-            <template v-slot:footer>
-                <div class="">
-                    <base-button type="warning" @click=" modals.showNotificationModal = false" class="my-1">
-                        Close
-                    </base-button>
-                    <base-button type="info" @click="$refs.notificationFormSubmitButton.click();" class="my-1 float-right">
-                        Save
-                    </base-button>
-                </div>
-            </template>
-        </card>
-    </modal>
+
     <modal v-model:show="modals.showUserModal" body-classes="p-0" modal-classes="modal-dialog-centered modal-lg">
         <card v-if="modals.showUserModal" type="secondary" shadow header-classes="bg-white pb-5" body-classes="px-lg-5 py-lg-4" class="border-0">
             <template v-slot:header>
@@ -147,6 +196,20 @@
                     </base-button>
                 </div>
             </template>
+            <div class="py-3 text-center">
+                <img :src="modals.row.user.photoUrl || 'img/theme/user.jpg'" class="modal-user-img rounded-circle" />
+                <h4 class="heading mt-4">{{ modals.row.name }}</h4>
+                <div class="pl-2 mt--2">
+                    <div class="row mb-2 text-center">
+                        <div class="col-md-12">
+                            <hr class="my-1" />
+                            <strong class="heading-small">
+                                {{modals.row.user.role}}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <form role="form" v-if="modals.row != null" style="overlay-y: scroll;">
                 <div class="">
                     <div class="row">
@@ -346,6 +409,7 @@
             </template>
         </card>
     </modal>
+
 </div>
 </template>
 
@@ -358,10 +422,9 @@ import {
     ElInput,
 } from "element-plus";
 import BasePagination from "@/components/BasePagination";
-import swal from "sweetalert2";
-import AssessorService from "../api/services/assessor.service";
-import NotificationsService from "../api/services/notifications.service";
-import BaseInput from '../components/BaseInput.vue';
+import UserService from "@/api/services/user.service";
+import AssessorService from "@/api/services/assessor.service";
+import BaseInput from '@/components/BaseInput.vue';
 
 export default {
     components: {
@@ -373,9 +436,49 @@ export default {
         [ElTableColumn.name]: ElTableColumn,
         BaseInput
     },
+    data() {
+        return {
+            modals: {},
+            pagination: {
+                perPage: 10,
+                currentPage: 1,
+                perPageOptions: [5, 10, 25, 50, 75, 100, 250, 500],
+                total: 0,
+            },
+            loading: true,
+            query: "",
+            searchQuery: "",
+            propsToSearch: ["firstname", "lastname", "email", "phone"],
+            tableColumns: [{
+                    prop: "firstName",
+                    label: "FirstName",
+                    minWidth: 100,
+                },
+                {
+                    prop: "lastName",
+                    label: "Lastname",
+                    minWidth: 100,
+                },
+                {
+                    prop: "email",
+                    label: "Email",
+                    minWidth: 150,
+                },
+                {
+                    prop: "phone",
+                    label: "Phone",
+                    minWidth: 80,
+                },
+            ],
+            tableData: [],
+            fuseSearch: null,
+            searchedData: [],
+
+        };
+    },
     computed: {
         pagedData() {
-            return this.tableData.slice(this.from, this.to);
+            return this.tableData;
         },
         /***
          * Searches through table data and returns a paginated array.
@@ -383,6 +486,7 @@ export default {
          * Do the search and the pagination on the server and display the data retrieved from server instead.
          * @returns {computed.pagedData}
          */
+        
         queriedData() {
             if (!this.searchQuery) {
                 return this.pagedData;
@@ -405,135 +509,72 @@ export default {
         },
         to() {
             let highBound = this.from + this.pagination.perPage;
-            if (this.total < highBound) {
-                highBound = this.total;
+            if (this.pagination.total < highBound) {
+                highBound = this.pagination.total;
             }
             return highBound;
         },
         from() {
             return this.pagination.perPage * (this.pagination.currentPage - 1);
         },
-        total() {
-            return this.searchedData.length > 0 ?
-                this.searchedData.length :
-                this.tableData.length;
+        user() {
+            return JSON.parse(window.localStorage.getItem("user")).user;
         },
+        
 
-    },
-    data() {
-        return {
-            modals: {
-                notificationModel: {},
-            },
-            pagination: {
-                perPage: 10,
-                currentPage: 1,
-                perPageOptions: [10, 25, 50, 100],
-                total: 0,
-            },
-            searchQuery: "",
-            propsToSearch: ["firstname", "lastname", "email", "portfolioSummary", ],
-            tableColumns: [{
-                    prop: "firstName",
-                    label: "First name",
-                    minWidth: 125,
-                },
-                {
-                    prop: "lastName",
-                    label: "Last name",
-                    minWidth: 125,
-                },
-                {
-                    prop: "email",
-                    label: "Email",
-                    minWidth: 150,
-                },
-                {
-                    prop: "phone",
-                    label: "Phone",
-                    minWidth: 100,
-                },
-                {
-                    prop: "numberOfAssessments",
-                    label: "Assessments",
-                    minWidth: 80,
-                },
-            ],
-            tableData: [],
-            fuseSearch: null,
-            searchedData: [],
-        };
     },
     methods: {
-        sendNotification() {
+        async loadTable() {
 
-            this.modals.showNotificationModal = false;
-            this.modals.notificationModel.userId = this.modals.row.userId;
+            this.loading = true
 
-            NotificationsService.sendNotification(this.modals.notificationModel).then((response) => {
-                // 
-            }).catch((error) => {
-                // 
-            }).finally(() => {
-                this.notificationModel = {};
-            });
+            if(this.from >  this.pagination.total){
+                this.pagination.currentPage = 1;
+            }
+
+            var params = "?size=" + this.pagination.perPage + "&page=" + (this.pagination.currentPage - 1);
+
+            if (this.searchQuery.length > 0) {
+                params = params + "&s=" + this.searchQuery;
+            }
+
+            var response = await UserService.getUsers(params);
+
+            this.loading = false;
+            if(response.data.result != (null || undefined)){
+                this.tableData = response.data.result;
+                this.pagination.total = response.data.totalElements
+                this.pagination.perPage = response.data.size
+                this.pagination.currentPage = response.data.page + 1
+            }
+            
+            return this.tableData;
         },
         handleView(index, row) {
             row.loading = true;
 
             AssessorService.getAssessor(row.id).then((response) => {
 
-                row.loading = false;
-                this.modals.showUserModal = true;
                 this.modals.row = response.data.result;
                 this.modals.row.userId = row.id
                 this.modals.row.firstName = row.firstName;
                 this.modals.row.lastName = row.lastName;
                 this.modals.row.name = row.firstName + " " + row.lastName;
+                this.modals.row.user = row;
+                
+                this.modals.showUserModal = true;
+                
+                row.loading = false;
+
             }).catch((error) => {
 
                 row.loading = false;
-                this.modals.showUserModal = false;
+                
+                this.modals.formMessage = false;
+
             });
 
             this.modals.index = index;
-        },
-        handleEdit(index, row) {
-            const swalWithBootstrapButtons2 = swal.mixin({
-                customClass: {
-                    confirmButton: "btn btn-info btn-fill",
-                },
-                buttonsStyling: false,
-            });
-
-            swalWithBootstrapButtons2.fire({
-                title: `You want to edit ${row.name}`,
-            });
-        },
-        handleDelete(index, row) {
-            const swalWithBootstrapButtons3 = swal.mixin({
-                customClass: {
-                    confirmButton: "btn btn-success btn-fill",
-                    cancelButton: "btn btn-danger btn-fill",
-                },
-                buttonsStyling: false,
-            });
-            swalWithBootstrapButtons3
-                .fire({
-                    title: "Are you sure?",
-                    text: `You won't be able to revert this!`,
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, delete it!",
-                })
-                .then((result) => {
-                    if (result.value) {
-                        this.deleteRow(row);
-                        swalWithBootstrapButtons3.fire({
-                            title: "Deleted!",
-                            text: `You deleted ${row.name}`,
-                        });
-                    }
-                });
         },
         deleteRow(row) {
             let indexToDelete = this.tableData.findIndex(
@@ -545,17 +586,106 @@ export default {
         },
     },
     mounted() {
-        AssessorService.getAssessors().then((response) => {
-            this.tableData = response.data.result;
-        });
+        this.loadTable();
     },
 
 };
 </script>
 
-<style>
+<style scoped>
 .no-border-card .card-footer {
     border-top: 0;
     border-top: 0;
+}
+
+.modal-user-img {
+    border-radius: 100%;
+    border: 4px solid rgb(100, 187, 117);
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    box-shadow: 0px 3px 10px grey !important;
+}
+
+.lds-grid {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-grid div {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #13772c;
+    animation: lds-grid 1.2s linear infinite;
+}
+
+.lds-grid div:nth-child(1) {
+    top: 8px;
+    left: 8px;
+    animation-delay: 0s;
+}
+
+.lds-grid div:nth-child(2) {
+    top: 8px;
+    left: 32px;
+    animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(3) {
+    top: 8px;
+    left: 56px;
+    animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(4) {
+    top: 32px;
+    left: 8px;
+    animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(5) {
+    top: 32px;
+    left: 32px;
+    animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(6) {
+    top: 32px;
+    left: 56px;
+    animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(7) {
+    top: 56px;
+    left: 8px;
+    animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(8) {
+    top: 56px;
+    left: 32px;
+    animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(9) {
+    top: 56px;
+    left: 56px;
+    animation-delay: -1.6s;
+}
+
+@keyframes lds-grid {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 </style>

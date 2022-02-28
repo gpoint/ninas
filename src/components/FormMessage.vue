@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div readonly class="mb-3 text-primary btn-block p-2" :class="'btn-outline-' + type" :style=" background " v-if="message != ''" @click="message = ''" style="font-size: 0.775rem;border-radius:5px;">
+    <div readonly class="mb-3 text-primary btn-block p-2" :class="'btn-outline-' + type" :style=" background " v-if="message != '' && message != null" @click="message = ''" style="font-size: 0.775rem;border-radius:5px;">
         <i class="fa fa-times float-right my-1 text-danger bg-white" style="height:17px;width:17px;border-radius:100%;padding:2px 0 0 4px;">
         </i>
         {{ message }}

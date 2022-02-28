@@ -6,6 +6,15 @@ import config from "../config";
 var API_URL = config.API_URL;
 
 class UserService {
+
+  getUser(id) {
+    return axios.get(API_URL + "user/id/" + id, { headers: authHeader() });
+  }
+
+  getUsers(params) {
+    return axios.get(API_URL + "user/paged" + (params || ""), { headers: authHeader() });
+  }
+  
   getProfile() {
     return axios.get(API_URL + "user", { headers: authHeader() });
   }

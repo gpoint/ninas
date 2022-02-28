@@ -4,11 +4,11 @@
     :class="[size && `pagination-${size}`, align && `justify-content-${align}`]"
   >
     <li class="page-item prev-page" :class="{ disabled: value === 1 }">
-      <a class="page-link" aria-label="Previous" @click="prevPage">
+      <button class="page-link" aria-label="Previous" @click="prevPage">
         <span aria-hidden="true"
           ><i class="fa fa-angle-left" aria-hidden="true"></i
         ></span>
-      </a>
+      </button>
     </li>
     <li
       class="page-item"
@@ -16,14 +16,14 @@
       :key="item"
       v-for="item in range(minPage, maxPage)"
     >
-      <a class="page-link" @click="changePage(item)">{{ item }}</a>
+      <button class="page-link" @click="changePage(item)">{{ item }}</button>
     </li>
     <li class="page-item next-page" :class="{ disabled: value === totalPages }">
-      <a class="page-link" aria-label="Next" @click="nextPage">
+      <button class="page-link" aria-label="Next" @click="nextPage">
         <span aria-hidden="true"
           ><i class="fa fa-angle-right" aria-hidden="true"></i
         ></span>
-      </a>
+      </button>
     </li>
   </ul>
 </template>
@@ -110,6 +110,7 @@ export default {
       defaultPagesToDisplay: 5,
     };
   },
+  emits: ["update:value"],
   methods: {
     range(min, max) {
       let arr = [];
@@ -119,26 +120,32 @@ export default {
       return arr;
     },
     changePage(item) {
-      this.$emit("input", item);
+      this.$emit("update:value", item);
     },
     nextPage() {
       if (this.value < this.totalPages) {
-        this.$emit("input", this.value + 1);
+        this.$emit("update:value", this.value + 1);
       }
     },
     prevPage() {
       if (this.value > 1) {
-        this.$emit("input", this.value - 1);
+        this.$emit("update:value", this.value - 1);
       }
     },
   },
   watch: {
     perPage() {
-      this.$emit("input", 1);
+      this.$emit("update:value", 1);
     },
     total() {
-      this.$emit("input", 1);
+      this.$emit("update:value", 1);
     },
   },
 };
 </script>
+<style scoped>
+.page-item.active .page-link{
+  background-color: #9eeea5;
+  border-color: #3ca139;
+}
+</style>
