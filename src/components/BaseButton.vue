@@ -15,7 +15,7 @@
       </slot>
     </span>
     <i v-if="!$slots.default && !loading" :class="icon"></i>
-    <div v-if="loading" class="lds-facebook"><div class="bg-danger"></div><div></div><div class="bg-info"></div></div>
+    <div v-if="loading" class="lds-facebook"><div style="background: #9eeea5;"></div><div></div><div class="bg-info"></div></div>
     <span
       class="btn-inner--text"
       v-if="($slots.icon || (icon && $slots.default)) && !loading"
