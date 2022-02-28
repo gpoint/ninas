@@ -20,7 +20,7 @@
                                         </base-button>
                                     </template>
                                     <div class="">
-                                        <img :src="educationList[educationIndex].certificateUrl" alt="" style="width: 100% !important;" >
+                                        <img :src="educationList[educationIndex].certificateUrl" alt="" style="width: 100% !important;">
                                     </div>
                                     <template v-slot:footer>
                                         <div class="">
@@ -153,6 +153,24 @@
                                     </base-button>
                                 </template>
                             </modal>
+                            <modal v-if="educationIndex < educationList.length" v-model:show="modals.showImageModal" gradient="secondary" modal-classes="modal modal-dialog-centered" style="overflow-y: scroll;">
+                                <template v-slot:header>
+                                    <div class="modal-title" id="modal-title-notification">
+                                        <h6>
+                                            This is a picture of the certificate acquired after the completion of this education track.
+                                        </h6>
+                                    </div>
+                                </template>
+                                <div class=" text-center mt--5 p-5">
+                                    <image-upload class="col-md-12" :ratio="3/4" type="Certificate" :url="'assessor/certificate/' + educationIndex " v-model:src="educationModel.certificateURL"></image-upload>
+                                </div>
+
+                                <template v-slot:footer>
+                                    <base-button type="white" text-color="info" class="ml-auto" @click="modals.showImageModal = false">
+                                        Close
+                                    </base-button>
+                                </template>
+                            </modal>
 
                             <div class="col-4 text-right">
                                 <base-button :loading="modals.showEducationModal || addInProgress" href="/profile" @click.prevent="educationIndex = educationList.length; modals.showEducationModal = true; " class="btn btn-sm btn-default">
@@ -208,6 +226,9 @@
                                     </div>
                                 </div>
                             </div>
+                                <base-button class="card-footer btn-lg bg-success" type="info" @click="educationIndex = index; modals.showImageModal = true;">
+                                    Service Preview Images
+                                </base-button>
                         </div>
                     </div>
                 </form>
@@ -220,10 +241,12 @@
 <script>
 import AssessorService from "../../api/services/assessor.service";
 import Badge from "../../components/Badge.vue";
+import ImageUpload from '@/components/ImageUpload.vue';
 
 export default {
     components: {
-        Badge
+        Badge,
+        ImageUpload
     },
     name: "education",
     props: {
@@ -314,14 +337,13 @@ export default {
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
             });
         },
-        uploadCertificate(){
+        uploadCertificate() {
 
             var formData = new FormData();
             formData.append("file", this.$refs.educationCertInput.files[0], "photo.jpg");
 
-
             AssessorService.uploadDegreeCertificate(this.educationIndex, formData).then((response) => {
-                
+
                 this.uploadingCertificate = false;
                 this.modals.showEducationModal = false;
                 this.educationList = this.sortEducationList(response.data.result.education);

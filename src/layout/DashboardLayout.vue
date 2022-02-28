@@ -5,13 +5,13 @@
 
             <sidebar-item v-if="user.role == 'ADMINISTRATOR'" :link="{
               name: 'Assessors',
-              icon: 'ni ni-single-02 text-danger',
+              icon: 'ni ni-single-02 text-default',
               path: '/profile',
             }" />
 
             <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Profile',
-              icon: 'ni ni-single-02 text-danger',
+              icon: 'ni ni-single-02 text-default',
               path: '/profile',
             }" />
 
@@ -24,7 +24,7 @@
 
             <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Experience',
-              icon: 'ni ni-user-run text-danger',
+              icon: 'ni ni-user-run text-default',
               path: '/assessor#experience',
             }" />
 
@@ -36,7 +36,7 @@
 
             <sidebar-item v-if="user.role == 'ASSESSOR'" :link="{
               name: 'Standards',
-              icon: 'ni ni-like-2 text-danger',
+              icon: 'ni ni-like-2 text-default',
               path: '/assessor#standards',
             }" />
 
@@ -45,7 +45,7 @@
               icon: 'ni ni-bell-55 ' + notificationsTxtColor,
               path: '/notifications',
             }" >
-                    <badge class="ml-2" type="danger">1</badge>
+                    <badge class="ml-2" type="default">1</badge>
             </sidebar-item>
 
             <sidebar-item :link="{
@@ -87,7 +87,7 @@ export default {
       },
 
       notificationsTxtColor(){
-        return this.user.notifications.length == 0 ? 'text-grey' : 'text-danger'
+        return this.user.notifications.length == 0 ? 'text-grey' : 'text-default'
       }
     },
     methods: {

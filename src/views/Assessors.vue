@@ -531,6 +531,11 @@ export default {
                     label: "Phone",
                     minWidth: 80,
                 },
+                {
+                    prop: "numberOfAssessments",
+                    label: "Assessments",
+                    minWidth: 80,
+                },
             ],
             tableData: [],
             fuseSearch: null,
@@ -679,7 +684,7 @@ export default {
     width: 180px;
     height: 180px;
     object-fit: cover;
-    box-shadow: 0px 3px 10px grey !important;
+    box-shadow: 0px 3px 10px rgb(120, 196, 122) !important;
 }
 
 .lds-grid {

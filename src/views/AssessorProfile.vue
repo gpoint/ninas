@@ -30,7 +30,7 @@
                 </template>
                 <form role="form" class="text-center" title="Click To Upload New Profile Picture">
                     <label v-show="profile.selectedPhoto == null" class="img-overlay-wrapper" style="border-radius:100%;">
-                        <img :src="user.photoUrl == null ? 'img/theme/user.jpg' : user.photoUrl" class="border-info user-img" />
+                        <img :src="user.photoUrl == null ? 'img/theme/user.jpg' : user.photoUrl" class="user-img" style="border-color: rgb(100, 187, 117);" />
                         <div class="overlay">
                             <div class="text"><i class="fa fa-2x fa-camera"></i></div>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#" @click.prevent="profile.modals.showPhotoModal=true;" class="image-overlay-wrapper">
-                                    <img :src="user.photoUrl == null ? 'img/theme/user.jpg' : user.photoUrl" class="rounded-circle user-img" style="width:180px;height:180px;" />
+                                    <img :src="user.photoUrl == null ? 'img/theme/user.jpg' : user.photoUrl" class=" rounded-circle user-img" style="width:180px;height:180px;" />
                                     <div class="overlay">
                                         <div class="text"><i class="fa fa-2x fa-camera"></i></div>
                                     </div>
@@ -328,14 +328,10 @@ export default {
 
                 UserService.uploadProfilePicture(formData).then((response) => {
                     if (response.data.isSuccess) {
-                        fetch(response.data.result.photoUrl);
-                        var userObject = localStorage.getItem("user");
-
-                        userObject.user = response.data.result;
-
-                        localStorage.setItem("user", userObject)
-                        // this.user.photoUrl = this.$refs.cropper.getCroppedCanvas().toDataUrl();
-                        // user.
+                        this.user = response.data.result;
+                        var user = JSON.parse(localStorage.getItem("user"));
+                        user.user = response.data.result;
+                        localStorage.setItem('user', JSON.stringify(user));
                         window.location.reload();
                     }
                     this.profile.pictureLoading = false;
@@ -394,7 +390,7 @@ export default {
     object-fit: cover;
     border-radius: 100%;
     border: 4px solid #fff;
-    box-shadow: 0px 3px 10px grey !important;
+    box-shadow: 0px 3px 10px rgb(120, 196, 122) !important;
 }
 
 .overlay {
