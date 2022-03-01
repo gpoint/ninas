@@ -105,7 +105,7 @@ export default {
         },
         ratio: {
             type: Number,
-            default: 1,
+            default: undefined,
             description: "The image aspect ratio."
         }
     },

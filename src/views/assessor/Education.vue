@@ -101,17 +101,6 @@
                                             <button class="d-none" ref="educationFormSubmitButton" type="submit"></button>
                                         </div>
                                     </form>
-                                    <template v-slot:footer>
-                                        <div class="">
-                                            <label v-if="!addingEducation" :disabled="uploadingCertificate?true:null" class="btn btn-warning">
-                                                <input class="d-none" type="file" ref="educationCertInput" @change="uploadCertificate();">
-                                                Upload Certificate
-                                            </label>
-                                            <base-button :loading="uploadingCertificate" type="info" @click="$refs.educationFormSubmitButton.click();" class="my-1 float-right">
-                                                Save
-                                            </base-button>
-                                        </div>
-                                    </template>
                                 </card>
                             </modal>
                             <modal v-if="educationIndex < educationList.length" v-model:show="modals.showDeleteEducationModal" gradient="danger" modal-classes="modal-danger modal-dialog-centered">
@@ -226,9 +215,9 @@
                                     </div>
                                 </div>
                             </div>
-                                <base-button class="card-footer btn-lg bg-success" type="info" @click="educationIndex = index; modals.showImageModal = true;">
-                                    Service Preview Images
-                                </base-button>
+                            <base-button class="card-footer btn-lg bg-success" type="info" @click="educationIndex = index; modals.showImageModal = true;">
+                                {{ education.certificateURL == null ? 'Upload' : 'Preview' }} Certificate
+                            </base-button>
                         </div>
                     </div>
                 </form>
@@ -335,21 +324,6 @@ export default {
             }).catch((error) => {
                 this.editInProgress = {};
                 this.errorMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message
-            });
-        },
-        uploadCertificate() {
-
-            var formData = new FormData();
-            formData.append("file", this.$refs.educationCertInput.files[0], "photo.jpg");
-
-            AssessorService.uploadDegreeCertificate(this.educationIndex, formData).then((response) => {
-
-                this.uploadingCertificate = false;
-                this.modals.showEducationModal = false;
-                this.educationList = this.sortEducationList(response.data.result.education);
-            }).catch((error) => {
-                this.profile.formMessage = error.response == undefined ? "Unable to reach Application Server" : error.response.data.message;
-                this.uploadingCertificate = false;
             });
         },
         deleteEducation() {

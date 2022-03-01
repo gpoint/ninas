@@ -103,7 +103,7 @@
                     </template>
                     <div>
                         <div class="pl-lg-4">
-                            <form-message v-model:type="passwordMessageType" v-model:message="passwordMessage"></form-message>
+                            <form-message v-if="passwordMessage != ''" v-model:type="passwordMessageType" v-model:message="passwordMessage"></form-message>
                             <div class="row">
                                 <div class="col-lg-12 mb-3">
                                 </div>

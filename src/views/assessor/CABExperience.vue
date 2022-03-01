@@ -124,6 +124,26 @@
                                     </base-button>
                                 </template>
                             </modal>
+                            <modal v-if="experienceIndex < experienceList.length" v-model:show="modals.showImageModal" gradient="secondary" modal-classes="modal modal-dialog-centered" style="overflow-y: scroll;">
+                                <template v-slot:header>
+                                    <div class="modal-title" id="modal-title-notification">
+                                        <h6>
+                                            This are evidences acquired during the course of the assessments.
+                                        </h6>
+                                    </div>
+                                </template>
+                                <div class=" text-center mt--5 row">
+                                    <image-upload class="col-sm-4" type="Evidence" :url="'assessor/cab-evidence/' + experienceIndex + '/0' " v-model:src="experienceModel.evidenceURLs[0]"></image-upload>
+                                    <image-upload class="col-sm-4" type="Evidence" :url="'assessor/cab-evidence/' + experienceIndex + '/1' " v-model:src="experienceModel.evidenceURLs[1]"></image-upload>
+                                    <image-upload class="col-sm-4" type="Evidence" :url="'assessor/cab-evidence/' + experienceIndex + '/2' " v-model:src="experienceModel.evidenceURLs[2]"></image-upload>
+                                </div>
+
+                                <template v-slot:footer>
+                                    <base-button type="white" text-color="info" class="ml-auto" @click="modals.showImageModal = false">
+                                        Close
+                                    </base-button>
+                                </template>
+                            </modal>
 
                             <div class="col-4 text-right">
                                 <base-button :loading="modals.showExperienceModal || addInProgress" href="/profile" @click.prevent="experienceIndex = experienceList.length; modals.showExperienceModal = true; " class="btn btn-sm btn-default">
@@ -173,6 +193,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <base-button class="card-footer btn-lg bg-success" type="info" @click="experienceIndex = index; modals.showImageModal = true;">
+                                Preview Evidences
+                            </base-button>
                         </div>
                     </div>
                 </form>
@@ -185,10 +208,12 @@
 <script>
 import AssessorService from "../../api/services/assessor.service";
 import Badge from "../../components/Badge.vue";
+import ImageUpload from '@/components/ImageUpload.vue';
 
 export default {
     components: {
-        Badge
+        Badge,
+        ImageUpload
     },
     name: "cab-experience",
     props: {
