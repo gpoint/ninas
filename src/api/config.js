@@ -7,5 +7,5 @@
 
 
 export default {
-  API_URL: "https://c-stemp-lms.oa.r.appspot.com/api/v1/",
+  API_URL: "https://assessor-database.rj.r.appspot.com/api/v1/",
 };
