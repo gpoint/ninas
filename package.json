@@ -15,7 +15,7 @@
     "check-password-strength": "^2.0.3",
     "choices.js": "^9.0.1",
     "core-js": "3.6.5",
-    "element-plus": "1.0.1-beta.24",
+    "element-plus": "2.11.1",
     "google-maps": "4.3.3",
     "jquery": "^3.6.0",
     "nouislider": "14.6.0",
